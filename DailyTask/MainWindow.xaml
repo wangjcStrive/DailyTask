@@ -17,7 +17,19 @@
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <DataGrid ItemsSource="{Binding ALLRecord}" Grid.Row="0" AutoGenerateColumns="False">
+                <DataGrid x:Name="AllRecord" ItemsSource="{Binding ALLRecord, Mode=TwoWay}" SelectedItem="{Binding NewAddRecord}" SelectedIndex="{Binding SelectedIndex}" Grid.Row="0" CanUserAddRows="True"/>
+                <Grid Grid.Row="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="5*"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Orientation="Vertical" Grid.Column="0" Margin="5" Width="80">
+                        <Button x:Name="AddRecord" Content="Add" Width="80" Height="25" Command="{Binding iAddRecord}"/>
+                        <Button x:Name="SaveRecord" Content="Save" Width="80" Height="25" Command="{Binding iSaveRecord}" Margin="0,8,0,0"/>
+                    </StackPanel>
+                </Grid>
+                <!--<DataGrid x:Name="AllRecord" Grid.Row="0"/>-->
+                <!--<DataGrid ItemsSource="{Binding ALLRecord}" Grid.Row="0" AutoGenerateColumns="False">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding JL}" Header="JL"/>
                         <DataGridTextColumn Binding="{Binding YL}" Header="YL"/>
@@ -26,7 +38,7 @@
                         <DataGridCheckBoxColumn Binding="{Binding Eng}" Header="Eng"/>
                         <DataGridTextColumn Binding="{Binding Score}" Header="Score"/>
                     </DataGrid.Columns>
-                </DataGrid>
+                </DataGrid>-->
             </Grid>
         </TabItem>
         <TabItem Header="password"></TabItem>

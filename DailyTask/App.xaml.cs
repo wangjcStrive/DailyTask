@@ -1,4 +1,7 @@
-﻿using System;
+﻿using DailyTask.IOC;
+using DailyTask.ViewModel;
+using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
@@ -13,5 +16,17 @@ namespace DailyTask
     /// </summary>
     public partial class App : Application
     {
+        public App()
+        {
+            var serviceCollection = new ServiceCollection();
+            ConfigureServices(serviceCollection);
+
+
+        }
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddTransient<NewRecordViewModel>();
+        }
     }
 }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyTask.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -23,7 +24,10 @@ namespace DailyTask
         public MainWindow()
         {
             InitializeComponent();
+            //using (DailyContext dbContext = new DailyContext())
+            //{
+            //    AllRecord.ItemsSource = dbContext.Daily.ToList();
+            //}
         }
-        public enum Sex { 男, 女 };
     }
 }

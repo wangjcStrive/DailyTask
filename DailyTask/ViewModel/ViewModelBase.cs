@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Windows;
 
@@ -10,7 +11,8 @@ namespace DailyTask.ViewModel
     {
         public event PropertyChangedEventHandler PropertyChanged;
 
-        protected void NotifyPropertyChanged(string propertyName)
+        //protected void NotifyPropertyChanged(string propertyName)
+        protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
             if (PropertyChanged == null)
             {
