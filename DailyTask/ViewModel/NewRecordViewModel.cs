@@ -17,7 +17,6 @@ namespace DailyTask.ViewModel
         public ICommand RecordEditDone { get; private set; }
         private Daily m_dailyRecord = new Daily();
         private bool m_dialogClose;
-        public static event EventHandler<EventArgs> AddRecordEvent;
         private DBAccess m_dbAccess = new DBAccess();
 
 

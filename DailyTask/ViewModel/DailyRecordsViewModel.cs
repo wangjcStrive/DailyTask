@@ -22,17 +22,7 @@ namespace DailyTask.ViewModel
             initAll();
         }
 
-        public void SaveRecord()
-        {
-            //if (isRecordModified())
-            //{
-            //    m_dbAccess.save();
-            //    MessageBox.Show($"{m_dbAccess.NewAddRecordSet.Count} add! {m_dbAccess.ModifiedRecordSet.Count} modified!");
-            //}
-        }
-
         #region ICommand & Relay Command
-        public ICommand iSaveRecord { get; private set; }
         public ICommand iAddRecord { get; private set; }
         public ICommand iModifyRecord { get; private set; }
         public ICommand iDelRecord { get; private set; }
@@ -93,7 +83,6 @@ namespace DailyTask.ViewModel
 
         private void InitRelayCommands()
         {
-            iSaveRecord = new RelayCommand(o => SaveRecord());
             iAddRecord = new RelayCommand(o => onAddRecordWindow());
             iModifyRecord = new RelayCommand(o => onModifyRecord());
             iDelRecord = new RelayCommand(o => onDelRecord());

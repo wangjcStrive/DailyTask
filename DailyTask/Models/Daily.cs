@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace DailyTask.Models
 {
+    [Serializable]
     public partial class Daily
     {
         public int Id { get; set; }

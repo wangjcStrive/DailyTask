@@ -8,6 +8,7 @@
         mc:Ignorable="d"
         dc:DialogCloser.DialogResult="{Binding DialogClose}"
         xmlns:vm="clr-namespace:DailyTask.ViewModel"
+        WindowStartupLocation="CenterScreen"
         Title="NewRecordView" Height="400" Width="300">
     <Window.DataContext>
         <vm:NewRecordViewModel x:Name="AddRecordWindowDC"/>
@@ -20,6 +21,8 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -48,6 +51,7 @@
             <TextBlock Grid.Row="8" Grid.Column="0" Text="WashRoom" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBlock Grid.Row="9" Grid.Column="0" Text="Efficiency" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBlock Grid.Row="10" Grid.Column="0" Text="HZ" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="11" Grid.Column="0" Text="Date" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBox Text="{Binding DailyRecord.Baby}" Grid.Row="0" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Jl}" Grid.Row="1" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Drink}" Grid.Row="2" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>

@@ -29,11 +29,13 @@ namespace DailyTask.Models
         {
             modelBuilder.Entity<Daily>(entity =>
             {
-                entity.Property(e => e.Id).HasColumnName("ID");
+                entity.Property(e => e.Id)
+                    .HasColumnName("ID")
+                    .ValueGeneratedNever();
 
                 entity.Property(e => e.Comments).HasMaxLength(255);
 
-                entity.Property(e => e.Date).HasColumnType("datetime");
+                entity.Property(e => e.Date).HasColumnType("date");
 
                 entity.Property(e => e.EatTooMuch).HasColumnName(" EatTooMuch");
 
