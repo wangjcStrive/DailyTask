@@ -24,10 +24,6 @@ namespace DailyTask
         public MainWindow()
         {
             InitializeComponent();
-            //using (DailyContext dbContext = new DailyContext())
-            //{
-            //    AllRecord.ItemsSource = dbContext.Daily.ToList();
-            //}
         }
     }
 }

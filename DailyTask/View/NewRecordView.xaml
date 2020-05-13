@@ -10,15 +10,17 @@
         xmlns:vm="clr-namespace:DailyTask.ViewModel"
         Title="NewRecordView" Height="400" Width="300">
     <Window.DataContext>
-        <vm:NewRecordViewModel/>
+        <vm:NewRecordViewModel x:Name="AddRecordWindowDC"/>
     </Window.DataContext>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="7*"/>
+            <RowDefinition Height="2*"/>
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
+                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -35,17 +37,17 @@
                 <ColumnDefinition/>
                 <ColumnDefinition/>
             </Grid.ColumnDefinitions>
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Baby" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="1" Grid.Column="0" Text="JL" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Drink" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="3" Grid.Column="0" Text="Eat" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Coding" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="5" Grid.Column="0" Text="LearnDaily" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Eng" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="7" Grid.Column="0" Text="Early to bed" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="WashRoom" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="9" Grid.Column="0" Text="Efficiency" VerticalAlignment="Center" Width="60" Height="30"/>
-            <TextBlock Grid.Row="10" Grid.Column="0" Text="HZ" VerticalAlignment="Center" Width="60" Height="30"/>
+            <TextBlock Grid.Row="0" Grid.Column="0" Text="Baby" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="1" Grid.Column="0" Text="JL" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="2" Grid.Column="0" Text="Drink" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="3" Grid.Column="0" Text="Eat" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="4" Grid.Column="0" Text="Coding" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="5" Grid.Column="0" Text="LearnDaily" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="6" Grid.Column="0" Text="Eng" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="7" Grid.Column="0" Text="Early to bed" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="8" Grid.Column="0" Text="WashRoom" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="9" Grid.Column="0" Text="Efficiency" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="10" Grid.Column="0" Text="HZ" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBox Text="{Binding DailyRecord.Baby}" Grid.Row="0" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Jl}" Grid.Row="1" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Drink}" Grid.Row="2" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
@@ -57,7 +59,9 @@
             <TextBox Text="{Binding DailyRecord.Washroom}" Grid.Row="8" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Efficiency}" Grid.Row="9" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Hz}" Grid.Row="10" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
+            <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="11" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
         </Grid>
-        <Button x:Name="AddRecord" Content="Add" Command="{Binding AddRecord}" Grid.Row="1" Width="80" Height="30"/>
+        <TextBox Text="{Binding DailyRecord.Comments}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Grid.Row="1" Margin="5"/>
+        <Button x:Name="AddRecord" Content="Done" Command="{Binding RecordEditDone}" Grid.Row="2" Width="80" Height="30"/>
     </Grid>
 </Window>

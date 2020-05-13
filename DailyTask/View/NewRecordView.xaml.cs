@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyTask.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -20,6 +21,12 @@ namespace DailyTask.View
         public NewRecordView()
         {
             InitializeComponent();
+        }
+
+        public NewRecordView(Daily daily)
+        {
+            InitializeComponent();
+            this.AddRecordWindowDC.DailyRecord = daily;
         }
     }
 }

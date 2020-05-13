@@ -1,8 +1,10 @@
-﻿using DailyTask.Helper;
+﻿using DailyTask.DBHelper;
+using DailyTask.Helper;
 using DailyTask.IOC;
 using DailyTask.Models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection.Metadata;
 using System.Text;
 using System.Windows;
@@ -10,19 +12,19 @@ using System.Windows.Input;
 
 namespace DailyTask.ViewModel
 {
-    public class NewRecordViewModel : ViewModelBase, IIOCService
+    public class NewRecordViewModel : ViewModelBase
     {
+        public ICommand RecordEditDone { get; private set; }
         private Daily m_dailyRecord = new Daily();
-        private bool m_canAddNewRecord = false;
         private bool m_dialogClose;
-        public ICommand AddRecord { get; private set; }
-        public static event EventHandler<Daily> AddRecordEvent;
+        public static event EventHandler<EventArgs> AddRecordEvent;
+        private DBAccess m_dbAccess = new DBAccess();
 
 
-        #region Public
+        #region Pubslic
         public NewRecordViewModel()
         {
-            initRelayCommand();
+            initAll();
         }
         #endregion
 
@@ -51,61 +53,33 @@ namespace DailyTask.ViewModel
 
 
         #region private
+        private void initAll()
+        {
+            initRelayCommand();
+        }
+
         private void initRelayCommand()
         {
-            AddRecord = new RelayCommand(o => onSaveRecord());
+            RecordEditDone = new RelayCommand(o => onEditDone());
         }
 
-        private void onSaveRecord()
+        private void onEditDone()
         {
-            if(canSaveRecord())
-            {
-                m_dailyRecord.Score = m_dailyRecord.Baby +
-                    m_dailyRecord.EarlyToBed +
-                    m_dailyRecord.Drink +
-                    m_dailyRecord.Jl +
-                    m_dailyRecord.EatTooMuch +
-                    m_dailyRecord.Washroom +
-                    m_dailyRecord.Coding +
-                    m_dailyRecord.LearnDaily +
-                    m_dailyRecord.Eng +
-                    m_dailyRecord.Efficiency +
-                    m_dailyRecord.Hz;
-                EventHandler<Daily> ehandler = AddRecordEvent;
-                if (ehandler != null)
-                {
-                    ehandler(this, DailyRecord);
-                }
+            // todo. score depend on other textbox. do it in xaml
+            m_dailyRecord.Score = m_dailyRecord.Baby +
+                m_dailyRecord.EarlyToBed +
+                m_dailyRecord.Drink +
+                m_dailyRecord.Jl +
+                m_dailyRecord.EatTooMuch +
+                m_dailyRecord.Washroom +
+                m_dailyRecord.Coding +
+                m_dailyRecord.LearnDaily +
+                m_dailyRecord.Eng +
+                m_dailyRecord.Efficiency +
+                m_dailyRecord.Hz;
 
-                DialogClose = true;
-            }
-            else
-            {
-                MessageBox.Show("Invalid Record", "Warning");
-            }
-        }
-        private bool canSaveRecord()
-        {
-            if (m_dailyRecord.Baby == null &&
-                m_dailyRecord.EarlyToBed == null &&
-                m_dailyRecord.Drink == null &&
-                m_dailyRecord.Jl == null &&
-                m_dailyRecord.EatTooMuch == null &&
-                m_dailyRecord.Washroom == null &&
-                m_dailyRecord.Coding == null &&
-                m_dailyRecord.LearnDaily == null &&
-                m_dailyRecord.Eng == null &&
-                m_dailyRecord.Efficiency == null &&
-                m_dailyRecord.Hz == null
-                )
-                return false;
-            else
-                return true;
-        }
-
-        public string test()
-        {
-            throw new NotImplementedException();
+            m_dbAccess.save(m_dailyRecord);
+            DialogClose = true;
         }
         #endregion
     }

@@ -4,13 +4,13 @@ using Microsoft.EntityFrameworkCore.Metadata;
 
 namespace DailyTask.Models
 {
-    public partial class DailyContext : DbContext
+    public partial class DailyTaskContext : DbContext
     {
-        public DailyContext()
+        public DailyTaskContext()
         {
         }
 
-        public DailyContext(DbContextOptions<DailyContext> options)
+        public DailyTaskContext(DbContextOptions<DailyTaskContext> options)
             : base(options)
         {
         }
@@ -21,7 +21,7 @@ namespace DailyTask.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer("Server=.\\MYSQL;Database=Daily;Trusted_Connection=True;");
+                optionsBuilder.UseSqlServer("Server=.\\MYSQL;Database=DailyTask;Trusted_Connection=True;");
             }
         }
 
@@ -29,7 +29,9 @@ namespace DailyTask.Models
         {
             modelBuilder.Entity<Daily>(entity =>
             {
-                entity.HasNoKey();
+                entity.Property(e => e.Id).HasColumnName("ID");
+
+                entity.Property(e => e.Comments).HasMaxLength(255);
 
                 entity.Property(e => e.Date).HasColumnType("datetime");
 
