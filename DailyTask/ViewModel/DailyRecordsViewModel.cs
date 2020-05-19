@@ -3,15 +3,21 @@ using DailyTask.Helper;
 using DailyTask.Model;
 using DailyTask.Models;
 using DailyTask.View;
+using LiveCharts;
+using LiveCharts.Defaults;
+using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Query;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 
 namespace DailyTask.ViewModel
 {
@@ -29,19 +35,42 @@ namespace DailyTask.ViewModel
         #endregion
 
         #region members
-        //private ObservableCollection<DailyRecordsModel> m_allRecord = new ObservableCollection<DailyRecordsModel>();
         private ObservableCollection<Daily> m_allRecord = new ObservableCollection<Daily>();
         private Daily m_selectedRecord ;
         private int m_selectedIndex = 0;
-        //todo. use IOC here
-        private DailyTaskContext m_dbContext = new DailyTaskContext();
-        private MD5Helper m_md5 = new MD5Helper();
+        private SeriesCollection m_JLPieSeriesCollection = new SeriesCollection();
+        private int m_JLCount = 0;
+        private SeriesCollection m_drinkPieSeriesCollection = new SeriesCollection();
+        private int m_drinkCount = 0;
         private DBAccess m_dbAccess = new DBAccess();
+        private int m_monthSelectedIndex = 0;
+        private List<string> m_monthList = new List<string>()
+        {
+            "All", "Jan","Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sep","Oct","Nov","Dec"
+        };
         #endregion
 
 
 
         #region Property
+        public int MonthSelectedIndex
+        {
+            get => m_monthSelectedIndex;
+            set
+            {
+                m_monthSelectedIndex = value;
+                NotifyPropertyChanged();
+            }
+        }
+        public List<string> MonthChoose
+        {
+            get => m_monthList;
+            set
+            {
+                m_monthList = value;
+                NotifyPropertyChanged();
+            }
+        }
         public ObservableCollection<Daily> ALLRecord
         {
             get => m_allRecord;
@@ -50,6 +79,27 @@ namespace DailyTask.ViewModel
                 m_allRecord = value;
                 NotifyPropertyChanged();
             }
+        }
+
+        public SeriesCollection JLPieSeriesCollection
+        {
+            get => m_JLPieSeriesCollection;
+            private set { }
+            //set
+            //{
+            //    m_JLPieSeriesCollection = value;
+            //    NotifyPropertyChanged();
+            //}
+        }
+        public SeriesCollection DrinkPieSeriesCollection
+        {
+            get => m_drinkPieSeriesCollection;
+            private set { }
+            //set
+            //{
+            //    m_drinkPieSeriesCollection = value;
+            //    NotifyPropertyChanged();
+            //}
         }
         public Daily SeletedRecord
         {
@@ -68,6 +118,8 @@ namespace DailyTask.ViewModel
             {
                 m_selectedIndex = value;
                 NotifyPropertyChanged();
+                //todo. can update UI in property setter??!!
+                updateUI();
             }
         }
         #endregion
@@ -75,10 +127,8 @@ namespace DailyTask.ViewModel
         #region Private Method
         private void initAll()
         {
+            updateUI();
             InitRelayCommands();
-            //todo. are ther better solution for update parent window when close derived window
-            //NewRecordViewModel.AddRecordEvent += (object s, EventArgs e) => { updateDataGrid(); };
-            updateDataGrid();
         }
 
         private void InitRelayCommands()
@@ -109,24 +159,47 @@ namespace DailyTask.ViewModel
                 }
             );
             addNewRecordWindow.ShowDialog();
-            updateDataGrid();
+            updateUI();
         }
         private void onModifyRecord()
         {
             NewRecordView addNewRecordWindow = new NewRecordView(SeletedRecord);
             addNewRecordWindow.ShowDialog();
-            updateDataGrid();
+            updateUI();
         }
 
         private void onDelRecord()
         {
             m_dbAccess.deleteRecord(SeletedRecord);
-            updateDataGrid();
+            updateUI();
         }
 
         private void updateDataGrid()
         {
             ALLRecord =  m_dbAccess.getAllRecord();
+            ALLRecord.Reverse();
+        }
+        private void updateUI()
+        {
+            updateDataGrid();
+            updatePieChardList();
+        }
+
+        private void updatePieChardList()
+        {
+            m_JLCount = m_allRecord.Count(p => p.Jl > 0);
+            m_drinkCount = m_allRecord.Count(p => p.Drink > 0);
+
+
+            m_JLPieSeriesCollection.Clear();
+            m_drinkPieSeriesCollection.Clear();
+
+            m_JLPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_JLCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            m_JLPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { ALLRecord.Count-m_JLCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            
+
+            m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkCount}, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { ALLRecord.Count - m_drinkCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("Fs({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
         }
         #endregion
     }

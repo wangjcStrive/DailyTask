@@ -9,7 +9,7 @@
         dc:DialogCloser.DialogResult="{Binding DialogClose}"
         xmlns:vm="clr-namespace:DailyTask.ViewModel"
         WindowStartupLocation="CenterScreen"
-        Title="NewRecordView" Height="400" Width="300">
+        Title="NewRecordView" Height="500" Width="400">
     <Window.DataContext>
         <vm:NewRecordViewModel x:Name="AddRecordWindowDC"/>
     </Window.DataContext>
@@ -63,7 +63,7 @@
             <TextBox Text="{Binding DailyRecord.Washroom}" Grid.Row="8" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Efficiency}" Grid.Row="9" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
             <TextBox Text="{Binding DailyRecord.Hz}" Grid.Row="10" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="11" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
+            <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="11" Grid.Column="1" Width="90" Height="30" HorizontalAlignment="Left"/>
         </Grid>
         <TextBox Text="{Binding DailyRecord.Comments}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Grid.Row="1" Margin="5"/>
         <Button x:Name="AddRecord" Content="Done" Command="{Binding RecordEditDone}" Grid.Row="2" Width="80" Height="30"/>

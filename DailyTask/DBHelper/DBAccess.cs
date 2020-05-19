@@ -24,7 +24,7 @@ namespace DailyTask.DBHelper
             using (var dbc = new DailyTaskContext())
             {
                 //todo. asyn/await
-                var DailyList = dbc.Daily.ToList();
+                var DailyList = dbc.Daily.OrderByDescending(p=>p.Id);
                 return new ObservableCollection<Daily>(DailyList);
                 //dbc.Daily.Load();
                 //allRecord = dbc.Daily.Local.ToObservableCollection();
