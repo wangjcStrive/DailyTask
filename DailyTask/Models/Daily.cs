@@ -7,7 +7,7 @@ namespace DailyTask.Models
     public partial class Daily
     {
         public int Id { get; set; }
-        public DateTime? Date { get; set; }
+        public DateTime Date { get; set; }
         public string Week { get; set; }
         public double? Baby { get; set; }
         public double? EarlyToBed { get; set; }

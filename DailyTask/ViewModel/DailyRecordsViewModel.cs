@@ -12,6 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -23,6 +24,7 @@ namespace DailyTask.ViewModel
 {
     public class DailyRecordsViewModel : ViewModelBase
     {
+        const string TimeToReview = "04:30";
         public DailyRecordsViewModel()
         {
             initAll();
@@ -36,17 +38,19 @@ namespace DailyTask.ViewModel
 
         #region members
         private ObservableCollection<Daily> m_allRecord = new ObservableCollection<Daily>();
-        private Daily m_selectedRecord ;
+        private Daily m_selectedRecord;
         private int m_selectedIndex = 0;
         private SeriesCollection m_JLPieSeriesCollection = new SeriesCollection();
-        private int m_JLCount = 0;
+        private int m_JLDoneCount = 0;
+        private int m_JLFailCount = 0;
         private SeriesCollection m_drinkPieSeriesCollection = new SeriesCollection();
-        private int m_drinkCount = 0;
+        private int m_drinkDoneCount = 0;
+        private int m_drinkFailCount = 0;
         private DBAccess m_dbAccess = new DBAccess();
         private int m_monthSelectedIndex = 0;
         private List<string> m_monthList = new List<string>()
         {
-            "All", "Jan","Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sep","Oct","Nov","Dec"
+            "All", "Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sep","Oct","Nov","Dec"
         };
         #endregion
 
@@ -60,6 +64,8 @@ namespace DailyTask.ViewModel
             {
                 m_monthSelectedIndex = value;
                 NotifyPropertyChanged();
+                //todo. can update UI in property setter??!!
+                updatePieChardList();
             }
         }
         public List<string> MonthChoose
@@ -85,21 +91,11 @@ namespace DailyTask.ViewModel
         {
             get => m_JLPieSeriesCollection;
             private set { }
-            //set
-            //{
-            //    m_JLPieSeriesCollection = value;
-            //    NotifyPropertyChanged();
-            //}
         }
         public SeriesCollection DrinkPieSeriesCollection
         {
             get => m_drinkPieSeriesCollection;
             private set { }
-            //set
-            //{
-            //    m_drinkPieSeriesCollection = value;
-            //    NotifyPropertyChanged();
-            //}
         }
         public Daily SeletedRecord
         {
@@ -118,17 +114,49 @@ namespace DailyTask.ViewModel
             {
                 m_selectedIndex = value;
                 NotifyPropertyChanged();
-                //todo. can update UI in property setter??!!
-                updateUI();
             }
         }
         #endregion
 
         #region Private Method
+        public async void showReview()
+        {
+            Task t = Task.Run(() =>
+            {
+                while (true)
+                {
+                    string currentTime = DateTime.Now.ToString("hh:mm");
+                    if (currentTime == TimeToReview)
+                    {
+                        Application.Current.Dispatcher.BeginInvoke(new Action(() =>
+                               {
+                                   Daily record = new Daily();
+                                   m_dbAccess.getRecordMonthAgo(ref record);
+                                   if (record.Comments != null)
+                                   {
+                                       var result = MessageBox.Show("time to review", "review", MessageBoxButton.YesNo);
+                                       if (result == MessageBoxResult.Yes)
+                                       {
+                                           DailyReviewView recordRevie = new DailyReviewView();
+                                           recordRevie.ShowDialog();
+                                       }
+                                   }
+                               })
+                            );
+                        break;
+                    }
+                    Task.Delay(10000);
+                }
+
+            });
+            await t;
+        }
+
         private void initAll()
         {
             updateUI();
             InitRelayCommands();
+            showReview();
         }
 
         private void InitRelayCommands()
@@ -141,22 +169,22 @@ namespace DailyTask.ViewModel
         private void onAddRecordWindow()
         {
             NewRecordView addNewRecordWindow = new NewRecordView(new Daily()
-                {
-                    Id = ALLRecord.Count+1,
-                    Baby = 0,
-                    Coding = 0,
-                    Date = DateTime.Now,
-                    Week = DateTime.Now.DayOfWeek.ToString(),
-                    Drink = 0,
-                    EarlyToBed = 0,
-                    EatTooMuch = 0,
-                    Efficiency = 0,
-                    Eng = 0,
-                    Hz = 0,
-                    Washroom = 0,
-                    LearnDaily = 0,
-                    Jl = 0,
-                }
+            {
+                Id = ALLRecord.Count + 1,
+                Baby = 0,
+                Coding = 0,
+                Date = DateTime.Now,
+                Week = DateTime.Now.DayOfWeek.ToString(),
+                Drink = 0,
+                EarlyToBed = 0,
+                EatTooMuch = 0,
+                Efficiency = 0,
+                Eng = 0,
+                Hz = 0,
+                Washroom = 0,
+                LearnDaily = 0,
+                Jl = 0,
+            }
             );
             addNewRecordWindow.ShowDialog();
             updateUI();
@@ -176,7 +204,7 @@ namespace DailyTask.ViewModel
 
         private void updateDataGrid()
         {
-            ALLRecord =  m_dbAccess.getAllRecord();
+            ALLRecord = m_dbAccess.getAllRecord();
             ALLRecord.Reverse();
         }
         private void updateUI()
@@ -187,19 +215,20 @@ namespace DailyTask.ViewModel
 
         private void updatePieChardList()
         {
-            m_JLCount = m_allRecord.Count(p => p.Jl > 0);
-            m_drinkCount = m_allRecord.Count(p => p.Drink > 0);
+            m_JLDoneCount = m_allRecord.Count(p => p.Jl > 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
+            m_JLFailCount = m_allRecord.Count(p => p.Jl == 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
+            m_drinkDoneCount = m_allRecord.Count(p => p.Drink > 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
+            m_drinkFailCount = m_allRecord.Count(p => p.Drink == 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
 
 
             m_JLPieSeriesCollection.Clear();
             m_drinkPieSeriesCollection.Clear();
 
-            m_JLPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_JLCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
-            m_JLPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { ALLRecord.Count-m_JLCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
-            
+            m_JLPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_JLDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            m_JLPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_JLFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
 
-            m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkCount}, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
-            m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { ALLRecord.Count - m_drinkCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("Fs({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_drinkFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
         }
         #endregion
     }

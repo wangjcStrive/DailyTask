@@ -31,6 +31,36 @@ namespace DailyTask.DBHelper
             }
         }
 
+        public void getRecordByID(int id, ref Daily record)
+        {
+            try
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+                    record = dbc.Daily.Single(p => p.Id == id);
+                }
+            }
+            catch (System.InvalidOperationException e)
+            {
+                MessageBox.Show($"can't delete record{record.Id}. {e.Message}");
+            }
+        }
+
+        public void getRecordMonthAgo(ref Daily record)
+        {
+            try
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+                    record = dbc.Daily.Single(p => p.Id == dbc.Daily.Count() - 7);
+                }
+            }
+            catch (System.InvalidOperationException e)
+            {
+                MessageBox.Show($"can't find record. {e.Message}");
+            }
+        }
+
         public void deleteRecord(Daily record)
         {
             try
@@ -52,7 +82,7 @@ namespace DailyTask.DBHelper
         {
             using (var dbc = new DailyTaskContext())
             {
-                var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id);
+                var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id && p.Date == record.Date);
                 if (query != null)  //exist, update
                 {
                     //todo. better soluton?
