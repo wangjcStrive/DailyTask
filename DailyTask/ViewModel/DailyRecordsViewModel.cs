@@ -46,6 +46,8 @@ namespace DailyTask.ViewModel
         private SeriesCollection m_drinkPieSeriesCollection = new SeriesCollection();
         private int m_drinkDoneCount = 0;
         private int m_drinkFailCount = 0;
+        private SeriesCollection m_totalScoreSeriesCollection = new SeriesCollection();
+
         private DBAccess m_dbAccess = new DBAccess();
         private int m_monthSelectedIndex = 0;
         private List<string> m_monthList = new List<string>()
@@ -95,6 +97,11 @@ namespace DailyTask.ViewModel
         public SeriesCollection DrinkPieSeriesCollection
         {
             get => m_drinkPieSeriesCollection;
+            private set { }
+        }
+        public SeriesCollection TotalScoreSeriesCollection
+        {
+            get => m_totalScoreSeriesCollection;
             private set { }
         }
         public Daily SeletedRecord
@@ -223,6 +230,7 @@ namespace DailyTask.ViewModel
 
             m_JLPieSeriesCollection.Clear();
             m_drinkPieSeriesCollection.Clear();
+            m_totalScoreSeriesCollection.Clear();
 
             m_JLPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_JLDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
             m_JLPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_JLFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
