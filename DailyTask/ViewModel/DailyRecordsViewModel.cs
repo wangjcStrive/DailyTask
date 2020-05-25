@@ -15,6 +15,7 @@ using System.Drawing;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -152,7 +153,7 @@ namespace DailyTask.ViewModel
                             );
                         break;
                     }
-                    Task.Delay(10000);
+                    Thread.Sleep(10000);
                 }
 
             });
@@ -163,7 +164,7 @@ namespace DailyTask.ViewModel
         {
             updateUI();
             InitRelayCommands();
-            showReview();
+            //showReview();
         }
 
         private void InitRelayCommands()
@@ -181,7 +182,7 @@ namespace DailyTask.ViewModel
                 Baby = 0,
                 Coding = 0,
                 Date = DateTime.Now,
-                Week = DateTime.Now.DayOfWeek.ToString(),
+                //Week = DateTime.Now.DayOfWeek.ToString(),
                 Drink = 0,
                 EarlyToBed = 0,
                 EatTooMuch = 0,
@@ -211,8 +212,7 @@ namespace DailyTask.ViewModel
 
         private void updateDataGrid()
         {
-            ALLRecord = m_dbAccess.getAllRecord();
-            ALLRecord.Reverse();
+            ALLRecord = new ObservableCollection<Daily>(m_dbAccess.getAllRecord().OrderByDescending(p => p.Date));
         }
         private void updateUI()
         {
@@ -237,6 +237,22 @@ namespace DailyTask.ViewModel
 
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_drinkFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+
+            if (m_monthSelectedIndex == 0 )
+            {
+                List<double> monthScore = m_allRecord.OrderBy(p=>p.Id).Select(p => p.Score ?? default(double)).ToList();
+                m_totalScoreSeriesCollection.Add(new LineSeries { Title = m_monthSelectedIndex.ToString(), Values = new ChartValues<double>(monthScore) });
+                //for (int i=0; i<DateTime.Now.Month; i++)
+                //{
+                //    List<double> monthScore = m_allRecord.Where(p => p.Date.Month == i).Select(p => p.Score??default(double)).ToList();
+                //    m_totalScoreSeriesCollection.Add(new LineSeries { Title = i.ToString(), Values = new ChartValues<double> (monthScore) });
+                //}
+            }
+            else
+            {
+                List<double> monthScore = m_allRecord.OrderBy(p => p.Id).Where(p => p.Date.Month == m_monthSelectedIndex).Select(p => p.Score ?? default(double)).ToList();
+                m_totalScoreSeriesCollection.Add(new LineSeries { Title = m_monthSelectedIndex.ToString(), Values = new ChartValues<double>(monthScore) });
+            }
         }
         #endregion
     }

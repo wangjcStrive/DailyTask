@@ -19,15 +19,12 @@ namespace DailyTask.DBHelper
 
         //public HashSet<int> NewAddRecordSet { get => m_newAddRecord;}
         //public HashSet<int> ModifiedRecordSet { get => m_modifiedRecord;}
-        public ObservableCollection<Daily> getAllRecord()
+        public List<Daily> getAllRecord()
         {
             using (var dbc = new DailyTaskContext())
             {
                 //todo. asyn/await
-                var DailyList = dbc.Daily.OrderByDescending(p=>p.Id);
-                return new ObservableCollection<Daily>(DailyList);
-                //dbc.Daily.Load();
-                //allRecord = dbc.Daily.Local.ToObservableCollection();
+                return dbc.Daily.OrderByDescending(p=>p.Id).ToList();
             }
         }
 
@@ -52,7 +49,7 @@ namespace DailyTask.DBHelper
             {
                 using (var dbc = new DailyTaskContext())
                 {
-                    record = dbc.Daily.Single(p => p.Id == dbc.Daily.Count() - 7);
+                    record = dbc.Daily.Single(p => p.Id == dbc.Daily.Count() - 13);
                 }
             }
             catch (System.InvalidOperationException e)
@@ -80,44 +77,52 @@ namespace DailyTask.DBHelper
 
         public void save(Daily record)
         {
-            using (var dbc = new DailyTaskContext())
+            try
             {
-                var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id && p.Date == record.Date);
-                if (query != null)  //exist, update
+                using (var dbc = new DailyTaskContext())
                 {
-                    //todo. better soluton?
-                    query.Id = record.Id;
-                    query.Date = record.Date;
-                    query.Week = record.Week;
-                    query.Baby = record.Baby;
-                    query.EarlyToBed = record.EarlyToBed;
-                    query.Drink = record.Drink;
-                    query.Jl = record.Jl;
-                    query.EatTooMuch = record.EatTooMuch;
-                    query.Washroom = record.Washroom;
-                    query.Coding = record.Coding;
-                    query.LearnDaily = record.LearnDaily;
-                    query.Eng = record.Eng;
-                    query.Efficiency = record.Efficiency;
-                    query.Hz = record.Hz;
-                    query.Score = record.Score;
-                    query.Comments = record.Comments;
-                    dbc.SaveChanges();
-                    MessageBox.Show($"modify {record.Id} done!");
-                }
-                else            //add new
-                {
-                    var dateQuery = dbc.Daily.SingleOrDefault(p => p.Date == record.Date);
-                    if (dateQuery == null)
+                    var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id && p.Date == record.Date);
+                    if (query != null)  //exist, update
                     {
-                        dbc.Daily.Add(record);
+                        //todo. better soluton?
+                        query.Id = record.Id;
+                        query.Date = record.Date;
+                        query.Week = record.Week;
+                        query.Baby = record.Baby;
+                        query.EarlyToBed = record.EarlyToBed;
+                        query.Drink = record.Drink;
+                        query.Jl = record.Jl;
+                        query.EatTooMuch = record.EatTooMuch;
+                        query.Washroom = record.Washroom;
+                        query.Coding = record.Coding;
+                        query.LearnDaily = record.LearnDaily;
+                        query.Eng = record.Eng;
+                        query.Efficiency = record.Efficiency;
+                        query.Hz = record.Hz;
+                        query.Score = record.Score;
+                        query.Comments = record.Comments;
                         dbc.SaveChanges();
-                        MessageBox.Show($"add {record.Id} done!");
+                        MessageBox.Show($"modify {record.Id} done!");
                     }
-                    else
-                        MessageBox.Show("date exist!");
+                    else            //add new
+                    {
+                        var dateQuery = dbc.Daily.SingleOrDefault(p => p.Date == record.Date);
+                        if (dateQuery == null)
+                        {
+                            dbc.Daily.Add(record);
+                            dbc.SaveChanges();
+                            MessageBox.Show($"add {record.Id} done!");
+                        }
+                        else
+                            MessageBox.Show("date exist!");
+                    }
                 }
             }
+            catch (Exception e)
+            {
+                MessageBox.Show($"failt to save record {record.Id}\n. {e.InnerException.Message}");
+            }
+
         }
     }
 }
