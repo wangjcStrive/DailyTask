@@ -12,7 +12,8 @@ namespace DailyTask.ViewModel
         public DailyReviewViewModel()
         {
             Daily record = new Daily();
-            m_dbAccess.getRecordMonthAgo(ref record);
+
+            m_dbAccess.getRecordByID(ref record, m_dbAccess.getRecordCount()- DailyRecordsViewModel.daysOffset);
             m_dailyStudy = record.Comments;
         }
 

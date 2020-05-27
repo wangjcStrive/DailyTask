@@ -8,7 +8,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="600" Width="1500">
+        Title="MainWindow" Height="600" Width="1530">
     <Window.DataContext>
         <vm:DailyRecordsViewModel x:Name="MainWindowDC"/>
     </Window.DataContext>

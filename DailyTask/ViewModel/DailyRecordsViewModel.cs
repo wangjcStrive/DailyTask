@@ -25,7 +25,8 @@ namespace DailyTask.ViewModel
 {
     public class DailyRecordsViewModel : ViewModelBase
     {
-        const string TimeToReview = "04:30";
+        public static int daysOffset = 12;
+        const string TimeToReview = "05:27";
         public DailyRecordsViewModel()
         {
             initAll();
@@ -139,7 +140,7 @@ namespace DailyTask.ViewModel
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                                {
                                    Daily record = new Daily();
-                                   m_dbAccess.getRecordMonthAgo(ref record);
+                                   m_dbAccess.getRecordByID(ref record, m_allRecord.Count - daysOffset);
                                    if (record.Comments != null)
                                    {
                                        var result = MessageBox.Show("time to review", "review", MessageBoxButton.YesNo);
@@ -149,6 +150,8 @@ namespace DailyTask.ViewModel
                                            recordRevie.ShowDialog();
                                        }
                                    }
+                                   else
+                                       MessageBox.Show($"nothing to review on {record.Date.ToString("yyyyMMdd")}");
                                })
                             );
                         break;
@@ -192,6 +195,8 @@ namespace DailyTask.ViewModel
                 Washroom = 0,
                 LearnDaily = 0,
                 Jl = 0,
+                Reviewd = 0,
+                Comments=""
             }
             );
             addNewRecordWindow.ShowDialog();

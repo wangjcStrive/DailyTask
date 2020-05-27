@@ -77,6 +77,7 @@ namespace DailyTask.ViewModel
                 m_dailyRecord.Efficiency +
                 m_dailyRecord.Hz;
 
+            //if (m_dailyRecord.Date.HasValue)
             m_dailyRecord.Week = m_dailyRecord.Date.DayOfWeek.ToString();
             m_dbAccess.save(m_dailyRecord);
             DialogClose = true;

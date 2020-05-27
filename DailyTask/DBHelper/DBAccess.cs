@@ -28,28 +28,46 @@ namespace DailyTask.DBHelper
             }
         }
 
-        public void getRecordByID(int id, ref Daily record)
+        //public void getRecordByID(int id, ref Daily record)
+        //{
+        //    try
+        //    {
+        //        using (var dbc = new DailyTaskContext())
+        //        {
+        //            record = dbc.Daily.Single(p => p.Id == id);
+        //        }
+        //    }
+        //    catch (System.InvalidOperationException e)
+        //    {
+        //        MessageBox.Show($"can't delete record{record.Id}. {e.Message}");
+        //    }
+        //}
+        public int getRecordCount()
+        {
+            int recordCount = 0;
+            try
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+                    recordCount = dbc.Daily.Count();
+                }
+            }
+            catch (System.InvalidOperationException e)
+            {
+                MessageBox.Show($"can't find record. {e.Message}");
+            }
+
+            return recordCount;
+        }
+
+        public void getRecordByID(ref Daily record, int id)
         {
             try
             {
                 using (var dbc = new DailyTaskContext())
                 {
                     record = dbc.Daily.Single(p => p.Id == id);
-                }
-            }
-            catch (System.InvalidOperationException e)
-            {
-                MessageBox.Show($"can't delete record{record.Id}. {e.Message}");
-            }
-        }
-
-        public void getRecordMonthAgo(ref Daily record)
-        {
-            try
-            {
-                using (var dbc = new DailyTaskContext())
-                {
-                    record = dbc.Daily.Single(p => p.Id == dbc.Daily.Count() - 13);
+                    record.Reviewd = 1;
                 }
             }
             catch (System.InvalidOperationException e)
@@ -81,7 +99,7 @@ namespace DailyTask.DBHelper
             {
                 using (var dbc = new DailyTaskContext())
                 {
-                    var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id && p.Date == record.Date);
+                    var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id);
                     if (query != null)  //exist, update
                     {
                         //todo. better soluton?
@@ -101,6 +119,7 @@ namespace DailyTask.DBHelper
                         query.Hz = record.Hz;
                         query.Score = record.Score;
                         query.Comments = record.Comments;
+                        query.Reviewd = record.Reviewd;
                         dbc.SaveChanges();
                         MessageBox.Show($"modify {record.Id} done!");
                     }

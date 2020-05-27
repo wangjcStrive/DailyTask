@@ -3,7 +3,6 @@ using System.Collections.Generic;
 
 namespace DailyTask.Models
 {
-    [Serializable]
     public partial class Daily
     {
         public int Id { get; set; }
@@ -22,5 +21,6 @@ namespace DailyTask.Models
         public double? Hz { get; set; }
         public double? Score { get; set; }
         public string Comments { get; set; }
+        public int? Reviewd { get; set; }
     }
 }
