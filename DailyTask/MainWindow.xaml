@@ -12,6 +12,15 @@
     <Window.DataContext>
         <vm:DailyRecordsViewModel x:Name="MainWindowDC"/>
     </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Helper/CommonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}"/>
+            <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <TabControl>
         <TabItem Header="Daily">
             <Grid>
@@ -31,9 +40,9 @@
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <StackPanel Orientation="Vertical" Grid.Column="0" Margin="5" Width="80">
-                        <Button x:Name="AddRecord" Content="Add" Width="80" Height="25" Command="{Binding iAddRecord}"/>
-                        <Button x:Name="ModifyRecord" Content="Modify" Width="80" Height="25" Command="{Binding iModifyRecord}" Margin="0,8,0,0"/>
-                        <Button x:Name="DelRecord" Content="Del" Width="80" Height="25" Command="{Binding iDelRecord}" Margin="0,8,0,0"/>
+                        <Button x:Name="AddRecord" Content="Add" Command="{Binding iAddRecord}"/>
+                        <Button x:Name="ModifyRecord" Content="Modify" Command="{Binding iModifyRecord}" Margin="0,8,0,0"/>
+                        <Button x:Name="DelRecord" Content="Del" Command="{Binding iDelRecord}" Margin="0,8,0,0"/>
                         <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" Margin="0,8,0,0" FontStretch="Medium"/>
                     </StackPanel>
                     <Grid Grid.Column="1">

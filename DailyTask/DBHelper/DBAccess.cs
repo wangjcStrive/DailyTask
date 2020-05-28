@@ -28,20 +28,6 @@ namespace DailyTask.DBHelper
             }
         }
 
-        //public void getRecordByID(int id, ref Daily record)
-        //{
-        //    try
-        //    {
-        //        using (var dbc = new DailyTaskContext())
-        //        {
-        //            record = dbc.Daily.Single(p => p.Id == id);
-        //        }
-        //    }
-        //    catch (System.InvalidOperationException e)
-        //    {
-        //        MessageBox.Show($"can't delete record{record.Id}. {e.Message}");
-        //    }
-        //}
         public int getRecordCount()
         {
             int recordCount = 0;

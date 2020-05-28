@@ -1,6 +1,5 @@
 ﻿using DailyTask.DBHelper;
 using DailyTask.Helper;
-using DailyTask.IOC;
 using DailyTask.Models;
 using System;
 using System.Collections.Generic;

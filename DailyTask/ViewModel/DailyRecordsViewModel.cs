@@ -25,8 +25,8 @@ namespace DailyTask.ViewModel
 {
     public class DailyRecordsViewModel : ViewModelBase
     {
-        public static int daysOffset = 12;
-        const string TimeToReview = "05:27";
+        public static int daysOffset = 13;
+        const string TimeToReview = "04:30";
         public DailyRecordsViewModel()
         {
             initAll();
@@ -167,7 +167,7 @@ namespace DailyTask.ViewModel
         {
             updateUI();
             InitRelayCommands();
-            //showReview();
+            showReview();
         }
 
         private void InitRelayCommands()

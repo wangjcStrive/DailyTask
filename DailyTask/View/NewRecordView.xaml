@@ -13,6 +13,15 @@
     <Window.DataContext>
         <vm:NewRecordViewModel x:Name="AddRecordWindowDC"/>
     </Window.DataContext>
+    <Window.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="../Helper/CommonStyle.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+            <Style TargetType="TextBox" BasedOn="{StaticResource TextBoxStyle}"/>
+            <Style TargetType="Button" BasedOn="{StaticResource ButtonStyle}"/>
+        </ResourceDictionary>
+    </Window.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="7*"/>
@@ -21,8 +30,6 @@
         </Grid.RowDefinitions>
         <Grid Grid.Row="0">
             <Grid.RowDefinitions>
-                <RowDefinition/>
-                <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
@@ -52,20 +59,20 @@
             <TextBlock Grid.Row="9" Grid.Column="0" Text="Efficiency" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBlock Grid.Row="10" Grid.Column="0" Text="HZ" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBlock Grid.Row="11" Grid.Column="0" Text="Date" VerticalAlignment="Center" Width="60" Height="20"/>
-            <TextBox Text="{Binding DailyRecord.Baby}" Grid.Row="0" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Jl}" Grid.Row="1" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Drink}" Grid.Row="2" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.EatTooMuch}" Grid.Row="3" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Coding}" Grid.Row="4" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.LearnDaily}" Grid.Row="5" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Eng}" Grid.Row="6" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.EarlyToBed}" Grid.Row="7" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Washroom}" Grid.Row="8" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Efficiency}" Grid.Row="9" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
-            <TextBox Text="{Binding DailyRecord.Hz}" Grid.Row="10" Grid.Column="1" Width="90" Height="20" HorizontalAlignment="Left"/>
+            <TextBox Text="{Binding DailyRecord.Baby}" Grid.Row="0" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Jl}" Grid.Row="1" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Drink}" Grid.Row="2" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.EatTooMuch}" Grid.Row="3" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Coding}" Grid.Row="4" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.LearnDaily}" Grid.Row="5" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Eng}" Grid.Row="6" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.EarlyToBed}" Grid.Row="7" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Washroom}" Grid.Row="8" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Efficiency}" Grid.Row="9" Grid.Column="1"/>
+            <TextBox Text="{Binding DailyRecord.Hz}" Grid.Row="10" Grid.Column="1"/>
             <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="11" Grid.Column="1" Width="90" Height="30" HorizontalAlignment="Left"/>
         </Grid>
-        <TextBox Text="{Binding DailyRecord.Comments}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Grid.Row="1" Margin="5"/>
-        <Button x:Name="AddRecord" Content="Done" Command="{Binding RecordEditDone}" Grid.Row="2" Width="80" Height="30"/>
+        <TextBox Text="{Binding DailyRecord.Comments}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" MinWidth="380" MinHeight="80" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" FontSize="12px"/>
+        <Button x:Name="AddRecord" Content="Done" Command="{Binding RecordEditDone}" Grid.Row="2"/>
     </Grid>
 </Window>
