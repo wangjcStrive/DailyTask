@@ -8,6 +8,7 @@ using LiveCharts.Defaults;
 using LiveCharts.Wpf;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Query;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -20,6 +21,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using NLog.Extensions.Logging;
 
 namespace DailyTask.ViewModel
 {
@@ -56,6 +58,7 @@ namespace DailyTask.ViewModel
         {
             "All", "Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sep","Oct","Nov","Dec"
         };
+        private static NLog.Logger m_logger = NLog.LogManager.GetCurrentClassLogger();
         #endregion
 
 
@@ -179,6 +182,9 @@ namespace DailyTask.ViewModel
         }
         private void onAddRecordWindow()
         {
+            //var addnewrecordWin = App.IOC.Services.GetRequiredService<NewRecordView>();
+            //addnewrecordWin.Show();
+
             NewRecordView addNewRecordWindow = new NewRecordView(new Daily()
             {
                 Id = ALLRecord.Count + 1,
@@ -196,7 +202,7 @@ namespace DailyTask.ViewModel
                 LearnDaily = 0,
                 Jl = 0,
                 Reviewd = 0,
-                Comments=""
+                Comments = ""
             }
             );
             addNewRecordWindow.ShowDialog();

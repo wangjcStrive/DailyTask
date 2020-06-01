@@ -1,4 +1,5 @@
 ﻿using DailyTask.Models;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -25,5 +26,13 @@ namespace DailyTask
         {
             InitializeComponent();
         }
+        //private readonly ISampleService sampleService;
+        //private readonly AppSettings settings;
+        //public MainWindow(ISampleService sampleService, IOptions<AppSettings> settings)
+        //{
+        //    InitializeComponent();
+        //    this.sampleService = sampleService;
+        //    this.settings = settings.Value;
+        //}
     }
 }
