@@ -22,15 +22,17 @@ using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
 using NLog.Extensions.Logging;
+using System.Net.Http.Headers;
 
 namespace DailyTask.ViewModel
 {
     public class DailyRecordsViewModel : ViewModelBase
     {
-        public static int daysOffset = 13;
+        public static int daysOffset = 7;
         const string TimeToReview = "04:30";
         public DailyRecordsViewModel()
         {
+            m_logger.Info("*************** Main Window start! ***************");
             initAll();
         }
 
@@ -38,6 +40,7 @@ namespace DailyTask.ViewModel
         public ICommand iAddRecord { get; private set; }
         public ICommand iModifyRecord { get; private set; }
         public ICommand iDelRecord { get; private set; }
+        public ICommand iRecordReview { get; private set; }
         #endregion
 
         #region members
@@ -59,6 +62,8 @@ namespace DailyTask.ViewModel
             "All", "Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sep","Oct","Nov","Dec"
         };
         private static NLog.Logger m_logger = NLog.LogManager.GetCurrentClassLogger();
+        private string m_longestDrink = string.Empty;
+        private string m_longestJL = string.Empty;
         #endregion
 
 
@@ -128,6 +133,25 @@ namespace DailyTask.ViewModel
                 NotifyPropertyChanged();
             }
         }
+        public string LongestJL
+        {
+            get => m_longestJL;
+            set
+            {
+                m_longestJL = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string LongestDrink
+        {
+            get => m_longestDrink;
+            set
+            {
+                m_longestDrink = value;
+                NotifyPropertyChanged();
+            }
+        }
         #endregion
 
         #region Private Method
@@ -142,19 +166,8 @@ namespace DailyTask.ViewModel
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                                {
-                                   Daily record = new Daily();
-                                   m_dbAccess.getRecordByID(ref record, m_allRecord.Count - daysOffset);
-                                   if (record.Comments != null)
-                                   {
-                                       var result = MessageBox.Show("time to review", "review", MessageBoxButton.YesNo);
-                                       if (result == MessageBoxResult.Yes)
-                                       {
-                                           DailyReviewView recordRevie = new DailyReviewView();
-                                           recordRevie.ShowDialog();
-                                       }
-                                   }
-                                   else
-                                       MessageBox.Show($"nothing to review on {record.Date.ToString("yyyyMMdd")}");
+                                    DailyReviewView recordRevie = new DailyReviewView();
+                                    recordRevie.ShowDialog();
                                })
                             );
                         break;
@@ -168,6 +181,7 @@ namespace DailyTask.ViewModel
 
         private void initAll()
         {
+            m_monthSelectedIndex = DateTime.Now.Month;
             updateUI();
             InitRelayCommands();
             showReview();
@@ -178,6 +192,7 @@ namespace DailyTask.ViewModel
             iAddRecord = new RelayCommand(o => onAddRecordWindow());
             iModifyRecord = new RelayCommand(o => onModifyRecord());
             iDelRecord = new RelayCommand(o => onDelRecord());
+            iRecordReview = new RelayCommand(o => onReviewRecord());
 
         }
         private void onAddRecordWindow()
@@ -202,7 +217,7 @@ namespace DailyTask.ViewModel
                 LearnDaily = 0,
                 Jl = 0,
                 Reviewd = 0,
-                Comments = ""
+                Comments = string.Empty
             }
             );
             addNewRecordWindow.ShowDialog();
@@ -221,14 +236,62 @@ namespace DailyTask.ViewModel
             updateUI();
         }
 
-        private void updateDataGrid()
+        private void onReviewRecord()
         {
-            ALLRecord = new ObservableCollection<Daily>(m_dbAccess.getAllRecord().OrderByDescending(p => p.Date));
+            DailyReviewView recordRevie = new DailyReviewView();
+            recordRevie.ShowDialog();
         }
+
         private void updateUI()
         {
             updateDataGrid();
             updatePieChardList();
+            updateLongestRecord();
+        }
+
+        private void updateLongestRecord()
+        {
+            uint jl_done= 0, jl_fail=0, max_jl_done = 0, max_jl_fail = 0, drink_done = 0, drink_fail = 0, max_drink_done = 0, max_drink_fail = 0;
+            foreach (var item in m_allRecord)
+            {
+                if(item.Jl == 0 )
+                {
+                    jl_fail++;
+                    jl_done = 0;
+                }
+                else if(item.Jl == 1)
+                {
+                    jl_done++;
+                    jl_fail = 0;
+                }
+
+                if(item.Drink == 0)
+                {
+                    drink_fail++;
+                    drink_done = 0;
+                }
+                else if(item.Drink==1)
+                {
+                    drink_done++;
+                    drink_fail = 0;
+                }
+
+                if (jl_fail > max_jl_fail)
+                    max_jl_fail = jl_fail;
+                if (jl_done > max_jl_done)
+                    max_jl_done = jl_done;
+                if (drink_fail > max_drink_fail)
+                    max_drink_fail = drink_fail;
+                if (drink_done > max_drink_done)
+                    max_drink_done = drink_done;
+            }
+            LongestJL = $" JL Fail {max_jl_fail}   Done {max_jl_done}";
+            LongestDrink = $" Dr Fail {max_drink_fail}   Done {max_drink_done}";
+        }
+
+        private void updateDataGrid()
+        {
+            ALLRecord = new ObservableCollection<Daily>(m_dbAccess.getAllRecord().OrderByDescending(p => p.Date));
         }
 
         private void updatePieChardList()

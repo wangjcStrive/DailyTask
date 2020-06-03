@@ -14,14 +14,21 @@ namespace DailyTask.ViewModel
             Daily record = new Daily();
 
             m_dbAccess.getRecordByID(ref record, m_dbAccess.getRecordCount()- DailyRecordsViewModel.daysOffset);
-            m_dailyStudy = record.Comments;
+            string firstRecord = record.Date.ToString("yyyyMMdd") + "\n" + record.Comments +"\n\n";
+
+            m_dbAccess.getRecordByID(ref record, m_dbAccess.getRecordCount() - DailyRecordsViewModel.daysOffset*2);
+            string secondRecord = record.Date.ToString("yyyyMMdd") + "\n" + record.Comments;
+
+            m_dailyStudy = firstRecord + secondRecord;
+
+
         }
 
 
         #region private
         private string m_dailyStudy;
         private DBAccess m_dbAccess = new DBAccess();
-
+        private string m_recordTime;
         #endregion
 
 
@@ -32,6 +39,16 @@ namespace DailyTask.ViewModel
             set
             {
                 m_dailyStudy = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string RecordTime
+        {
+            get => m_recordTime;
+            set
+            {
+                m_recordTime = value;
                 NotifyPropertyChanged();
             }
         }

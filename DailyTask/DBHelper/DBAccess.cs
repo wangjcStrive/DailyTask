@@ -14,11 +14,7 @@ namespace DailyTask.DBHelper
 {
     public class DBAccess
     {
-        //private HashSet<int> m_newAddRecord = new HashSet<int>();
-        //private HashSet<int> m_modifiedRecord = new HashSet<int>();
-
-        //public HashSet<int> NewAddRecordSet { get => m_newAddRecord;}
-        //public HashSet<int> ModifiedRecordSet { get => m_modifiedRecord;}
+        private static NLog.Logger m_logger = NLog.LogManager.GetCurrentClassLogger();
         public List<Daily> getAllRecord()
         {
             using (var dbc = new DailyTaskContext())
@@ -40,7 +36,8 @@ namespace DailyTask.DBHelper
             }
             catch (System.InvalidOperationException e)
             {
-                MessageBox.Show($"can't find record. {e.Message}");
+                m_logger.Error("can't get record count!");
+                MessageBox.Show($"can't get record count! {e.Message}");
             }
 
             return recordCount;
@@ -53,12 +50,12 @@ namespace DailyTask.DBHelper
                 using (var dbc = new DailyTaskContext())
                 {
                     record = dbc.Daily.Single(p => p.Id == id);
-                    record.Reviewd = 1;
                 }
             }
             catch (System.InvalidOperationException e)
             {
-                MessageBox.Show($"can't find record. {e.Message}");
+                m_logger.Error($"can't get record ID:{id}! {e.Message}");
+                MessageBox.Show($"can't get record ID:{id}. {e.Message}");
             }
         }
 
@@ -75,6 +72,7 @@ namespace DailyTask.DBHelper
             }
             catch (System.InvalidOperationException e)
             {
+                m_logger.Error($"can't delete record{record.Id}. {e.Message}");
                 MessageBox.Show($"can't delete record{record.Id}. {e.Message}");
             }
         }
@@ -107,6 +105,7 @@ namespace DailyTask.DBHelper
                         query.Comments = record.Comments;
                         query.Reviewd = record.Reviewd;
                         dbc.SaveChanges();
+                        m_logger.Info($"modify {record.Id} {record.Week} {record.Date:yyyyMMdd} done!");
                         MessageBox.Show($"modify {record.Id} done!");
                     }
                     else            //add new
@@ -116,6 +115,7 @@ namespace DailyTask.DBHelper
                         {
                             dbc.Daily.Add(record);
                             dbc.SaveChanges();
+                            m_logger.Info($"add {record.Id} {record.Week} {record.Date:yyyyMMdd} done!");
                             MessageBox.Show($"add {record.Id} done!");
                         }
                         else
@@ -125,6 +125,7 @@ namespace DailyTask.DBHelper
             }
             catch (Exception e)
             {
+                m_logger.Error($"failt to save record {record.Id}\n. {e.InnerException.Message}");
                 MessageBox.Show($"failt to save record {record.Id}\n. {e.InnerException.Message}");
             }
 

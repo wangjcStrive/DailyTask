@@ -8,7 +8,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="600" Width="1530">
+        Title="MainWindow" Height="700" Width="1540">
     <Window.DataContext>
         <vm:DailyRecordsViewModel x:Name="MainWindowDC"/>
     </Window.DataContext>
@@ -33,18 +33,63 @@
                           SelectedItem="{Binding SeletedRecord}" 
                           SelectedIndex="{Binding SelectedIndex}"
                           CanUserAddRows="False"
-                          />
+                          AlternationCount="2"
+                          >
+                    <DataGrid.RowStyle>
+                        <Style TargetType="{x:Type DataGridRow}">
+                            <Style.Triggers>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="0">
+                                    <Setter Property="Background" Value="#FFE0EEF5" />
+                                </Trigger>
+                                <Trigger Property="ItemsControl.AlternationIndex" Value="1">
+                                    <Setter Property="Background" Value="#FFF2F2F2" />
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.RowStyle>
+                </DataGrid>
                 <Grid Grid.Row="1">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
-                    <StackPanel Orientation="Vertical" Grid.Column="0" Margin="5" Width="80">
-                        <Button x:Name="AddRecord" Content="Add" Command="{Binding iAddRecord}"/>
-                        <Button x:Name="ModifyRecord" Content="Modify" Command="{Binding iModifyRecord}" Margin="0,8,0,0"/>
-                        <Button x:Name="DelRecord" Content="Del" Command="{Binding iDelRecord}" Margin="0,8,0,0"/>
-                        <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" Margin="0,8,0,0" FontStretch="Medium"/>
-                    </StackPanel>
+                    <Grid Grid.Column="0">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="4*"/>
+                            <RowDefinition Height="1*"/>
+                        </Grid.RowDefinitions>
+                        <Grid Grid.Row="0">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition/>
+                                <ColumnDefinition/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <Button x:Name="AddRecord" Content="Add" Command="{Binding iAddRecord}" Grid.Row="0"/>
+                                <Button x:Name="ModifyRecord" Content="Modify" Command="{Binding iModifyRecord}" Grid.Row="1"/>
+                                <Button x:Name="DelRecord" Content="Del" Command="{Binding iDelRecord}" Grid.Row="2"/>
+                                <Button x:Name="ReviewRecord" Content="Review" Command="{Binding iRecordReview}" Grid.Row="3"/>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                    <RowDefinition/>
+                                </Grid.RowDefinitions>
+                                <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" FontStretch="Medium" Grid.Row="0"/>
+                            </Grid>
+                        </Grid>
+                        <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Left">
+                            <TextBlock Text="{Binding LongestJL}" Margin="0,0,0,0" HorizontalAlignment="Center"/>
+                            <TextBlock Text="{Binding LongestDrink}" Margin="0,8,0,0" HorizontalAlignment="Center"/>
+                        </StackPanel>
+                    </Grid>
                     <Grid Grid.Column="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="1*"/>

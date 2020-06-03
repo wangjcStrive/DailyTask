@@ -17,5 +17,6 @@
             <RowDefinition Height="1*"/>
         </Grid.RowDefinitions>
         <TextBox Text="{Binding DailyStudey}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" Grid.Row="0" Margin="5,5,5,5"/>
+        <TextBlock Text="{Binding RecordTime}" Width="150" Height="45" Grid.Row="1"/>
     </Grid>
 </Window>
