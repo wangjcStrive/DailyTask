@@ -23,6 +23,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using NLog.Extensions.Logging;
 using System.Net.Http.Headers;
+using System.ComponentModel;
+using System.Windows.Data;
 
 namespace DailyTask.ViewModel
 {
@@ -44,7 +46,9 @@ namespace DailyTask.ViewModel
         #endregion
 
         #region members
-        private ObservableCollection<Daily> m_allRecord = new ObservableCollection<Daily>();
+        private DBAccess m_dbAccess = new DBAccess();
+        private ICollectionView m_allRecordCollectionView;
+        private List<Daily> m_allRecord;
         private Daily m_selectedRecord;
         private int m_selectedIndex = 0;
         private SeriesCollection m_JLPieSeriesCollection = new SeriesCollection();
@@ -55,8 +59,7 @@ namespace DailyTask.ViewModel
         private int m_drinkFailCount = 0;
         private SeriesCollection m_totalScoreSeriesCollection = new SeriesCollection();
 
-        private DBAccess m_dbAccess = new DBAccess();
-        private int m_monthSelectedIndex = 0;
+        private int m_monthSelectedIndex = DateTime.Now.Month;
         private List<string> m_monthList = new List<string>()
         {
             "All", "Jan","Feb","Mar","Apr","May","Jun","July","Aug","Sep","Oct","Nov","Dec"
@@ -64,11 +67,31 @@ namespace DailyTask.ViewModel
         private static NLog.Logger m_logger = NLog.LogManager.GetCurrentClassLogger();
         private string m_longestDrink = string.Empty;
         private string m_longestJL = string.Empty;
+        private string m_commentsFilter = string.Empty;
         #endregion
 
 
 
         #region Property
+        public string CommentsFilter
+        {
+            get => m_commentsFilter;
+            set
+            {
+                m_commentsFilter = value;
+                NotifyPropertyChanged();
+                m_allRecordCollectionView.Filter = obj =>
+                {
+                    Daily record = obj as Daily;
+                    if (CommentsFilter == string.Empty)
+                        return true;
+                    bool bFilterResult = false;
+                    if (record != null && record.Comments != null)
+                        bFilterResult = record.Comments.ContainsIgnoreCase(CommentsFilter);
+                    return bFilterResult;
+                };
+            }
+        }
         public int MonthSelectedIndex
         {
             get => m_monthSelectedIndex;
@@ -89,12 +112,12 @@ namespace DailyTask.ViewModel
                 NotifyPropertyChanged();
             }
         }
-        public ObservableCollection<Daily> ALLRecord
+        public ICollectionView AllRecordCollectionView
         {
-            get => m_allRecord;
+            get => m_allRecordCollectionView;
             set
             {
-                m_allRecord = value;
+                m_allRecordCollectionView = value;
                 NotifyPropertyChanged();
             }
         }
@@ -155,6 +178,16 @@ namespace DailyTask.ViewModel
         #endregion
 
         #region Private Method
+        private bool onFilter(object obj)
+        {
+            Daily record = obj as Daily;
+            if (CommentsFilter == string.Empty)
+                return true;
+            bool bFilterResult = false;
+            if (record != null && record.Comments != null)
+                bFilterResult = record.Comments.ContainsIgnoreCase(CommentsFilter);
+            return bFilterResult;
+        }
         public async void showReview()
         {
             Task t = Task.Run(() =>
@@ -181,7 +214,6 @@ namespace DailyTask.ViewModel
 
         private void initAll()
         {
-            m_monthSelectedIndex = DateTime.Now.Month;
             updateUI();
             InitRelayCommands();
             showReview();
@@ -202,7 +234,7 @@ namespace DailyTask.ViewModel
 
             NewRecordView addNewRecordWindow = new NewRecordView(new Daily()
             {
-                Id = ALLRecord.Count + 1,
+                Id = m_allRecord.Count + 1,
                 Baby = 0,
                 Coding = 0,
                 Date = DateTime.Now,
@@ -225,14 +257,15 @@ namespace DailyTask.ViewModel
         }
         private void onModifyRecord()
         {
-            NewRecordView addNewRecordWindow = new NewRecordView(SeletedRecord);
+            NewRecordView addNewRecordWindow = new NewRecordView(AllRecordCollectionView.CurrentItem as Daily);
             addNewRecordWindow.ShowDialog();
             updateUI();
         }
 
         private void onDelRecord()
         {
-            m_dbAccess.deleteRecord(SeletedRecord);
+            Daily selectedRecord = AllRecordCollectionView.CurrentItem as Daily;
+            m_dbAccess.deleteRecordByID(selectedRecord.Id);
             updateUI();
         }
 
@@ -291,7 +324,10 @@ namespace DailyTask.ViewModel
 
         private void updateDataGrid()
         {
-            ALLRecord = new ObservableCollection<Daily>(m_dbAccess.getAllRecord().OrderByDescending(p => p.Date));
+            m_allRecord = m_dbAccess.getAllRecord().OrderByDescending(p => p.Date).ToList();
+            //todo!! 这里要更新datagrid，每次都要重新GetDefaultView()，有没有其他方法。
+            AllRecordCollectionView = CollectionViewSource.GetDefaultView(new ObservableCollection<Daily>(m_allRecord));
+            AllRecordCollectionView.Refresh();
         }
 
         private void updatePieChardList()

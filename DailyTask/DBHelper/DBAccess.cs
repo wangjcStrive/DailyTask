@@ -59,21 +59,21 @@ namespace DailyTask.DBHelper
             }
         }
 
-        public void deleteRecord(Daily record)
+        public void deleteRecordByID(int recordID)
         {
             try
             {
                 using (var dbc = new DailyTaskContext())
                 {
-                    var query = dbc.Daily.Single(p => p.Id == record.Id);
+                    var query = dbc.Daily.Single(p => p.Id == recordID);
                     dbc.Remove(query);
                     dbc.SaveChanges();
                 }
             }
             catch (System.InvalidOperationException e)
             {
-                m_logger.Error($"can't delete record{record.Id}. {e.Message}");
-                MessageBox.Show($"can't delete record{record.Id}. {e.Message}");
+                m_logger.Error($"can't delete record{recordID}. {e.Message}");
+                MessageBox.Show($"can't delete record{recordID}. {e.Message}");
             }
         }
 

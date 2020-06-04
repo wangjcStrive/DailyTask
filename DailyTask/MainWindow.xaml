@@ -29,11 +29,10 @@
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
                 <DataGrid x:Name="AllRecord"  Grid.Row="0" 
-                          ItemsSource="{Binding ALLRecord, Mode=TwoWay}" 
-                          SelectedItem="{Binding SeletedRecord}" 
-                          SelectedIndex="{Binding SelectedIndex}"
+                          ItemsSource="{Binding AllRecordCollectionView}" 
                           CanUserAddRows="False"
                           AlternationCount="2"
+                          IsSynchronizedWithCurrentItem="True"
                           >
                     <DataGrid.RowStyle>
                         <Style TargetType="{x:Type DataGridRow}">
@@ -83,6 +82,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" FontStretch="Medium" Grid.Row="0"/>
+                                <TextBox Text="{Binding CommentsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Center"/>
                             </Grid>
                         </Grid>
                         <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Left">
