@@ -8,7 +8,7 @@
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
-        Title="MainWindow" Height="700" Width="1540">
+        Title="MainWindow" Height="700" Width="1600">
     <Window.DataContext>
         <vm:DailyRecordsViewModel x:Name="MainWindowDC"/>
     </Window.DataContext>
@@ -25,10 +25,15 @@
         <TabItem Header="Daily">
             <Grid>
                 <Grid.RowDefinitions>
+                    <RowDefinition Height="30"/>
                     <RowDefinition Height="2*"/>
                     <RowDefinition Height="1*"/>
                 </Grid.RowDefinitions>
-                <DataGrid x:Name="AllRecord"  Grid.Row="0" 
+                <StackPanel Grid.Row="0" Orientation="Horizontal">
+                    <TextBlock Text="Search:" Margin="2" Height="20"/>
+                    <TextBox Text="{Binding CommentsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="0" HorizontalAlignment="Left" Height="20" MinWidth="1200" Margin="2"/>
+                </StackPanel>
+                <DataGrid x:Name="AllRecord"  Grid.Row="1" 
                           ItemsSource="{Binding AllRecordCollectionView}" 
                           CanUserAddRows="False"
                           AlternationCount="2"
@@ -38,16 +43,16 @@
                         <Style TargetType="{x:Type DataGridRow}">
                             <Style.Triggers>
                                 <Trigger Property="ItemsControl.AlternationIndex" Value="0">
-                                    <Setter Property="Background" Value="#FFE0EEF5" />
+                                    <Setter Property="Background" Value="AliceBlue" />
                                 </Trigger>
                                 <Trigger Property="ItemsControl.AlternationIndex" Value="1">
-                                    <Setter Property="Background" Value="#FFF2F2F2" />
+                                    <Setter Property="Background" Value="White" />
                                 </Trigger>
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
                 </DataGrid>
-                <Grid Grid.Row="1">
+                <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
                         <ColumnDefinition Width="1*"/>
                         <ColumnDefinition Width="5*"/>
@@ -82,7 +87,7 @@
                                     <RowDefinition/>
                                 </Grid.RowDefinitions>
                                 <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" FontStretch="Medium" Grid.Row="0"/>
-                                <TextBox Text="{Binding CommentsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Center"/>
+                                <!--<TextBox Text="{Binding CommentsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Center"/>-->
                             </Grid>
                         </Grid>
                         <StackPanel Orientation="Vertical" Grid.Row="1" HorizontalAlignment="Left">

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DailyTask.Models;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Windows;
@@ -20,6 +21,11 @@ namespace DailyTask.View
         public DailyReviewView()
         {
             InitializeComponent();
+        }
+        public DailyReviewView(string reviewStr)
+        {
+            InitializeComponent();
+            this.ReviewViewModel.DailyStudey = reviewStr;
         }
     }
 }

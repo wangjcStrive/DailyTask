@@ -49,8 +49,7 @@ namespace DailyTask.ViewModel
         private DBAccess m_dbAccess = new DBAccess();
         private ICollectionView m_allRecordCollectionView;
         private List<Daily> m_allRecord;
-        private Daily m_selectedRecord;
-        private int m_selectedIndex = 0;
+
         private SeriesCollection m_JLPieSeriesCollection = new SeriesCollection();
         private int m_JLDoneCount = 0;
         private int m_JLFailCount = 0;
@@ -137,25 +136,7 @@ namespace DailyTask.ViewModel
             get => m_totalScoreSeriesCollection;
             private set { }
         }
-        public Daily SeletedRecord
-        {
-            get => m_selectedRecord;
-            set
-            {
-                m_selectedRecord = value;
-                NotifyPropertyChanged();
-            }
-        }
 
-        public int SelectedIndex
-        {
-            get => m_selectedIndex;
-            set
-            {
-                m_selectedIndex = value;
-                NotifyPropertyChanged();
-            }
-        }
         public string LongestJL
         {
             get => m_longestJL;
@@ -178,16 +159,6 @@ namespace DailyTask.ViewModel
         #endregion
 
         #region Private Method
-        private bool onFilter(object obj)
-        {
-            Daily record = obj as Daily;
-            if (CommentsFilter == string.Empty)
-                return true;
-            bool bFilterResult = false;
-            if (record != null && record.Comments != null)
-                bFilterResult = record.Comments.ContainsIgnoreCase(CommentsFilter);
-            return bFilterResult;
-        }
         public async void showReview()
         {
             Task t = Task.Run(() =>
@@ -199,8 +170,10 @@ namespace DailyTask.ViewModel
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                                {
-                                    DailyReviewView recordRevie = new DailyReviewView();
-                                    recordRevie.ShowDialog();
+                                   List<int> recordToUpdate;
+                                   DailyReviewView recordRevie = new DailyReviewView(getReviewStr(out recordToUpdate));
+                                   recordRevie.ShowDialog();
+                                   m_dbAccess.updateReiveStatus(recordToUpdate);
                                })
                             );
                         break;
@@ -210,6 +183,7 @@ namespace DailyTask.ViewModel
 
             });
             await t;
+            updateUI();
         }
 
         private void initAll()
@@ -229,16 +203,12 @@ namespace DailyTask.ViewModel
         }
         private void onAddRecordWindow()
         {
-            //var addnewrecordWin = App.IOC.Services.GetRequiredService<NewRecordView>();
-            //addnewrecordWin.Show();
-
             NewRecordView addNewRecordWindow = new NewRecordView(new Daily()
             {
                 Id = m_allRecord.Count + 1,
                 Baby = 0,
                 Coding = 0,
                 Date = DateTime.Now,
-                //Week = DateTime.Now.DayOfWeek.ToString(),
                 Drink = 0,
                 EarlyToBed = 0,
                 EatTooMuch = 0,
@@ -269,10 +239,41 @@ namespace DailyTask.ViewModel
             updateUI();
         }
 
+        //主动review之前的
         private void onReviewRecord()
         {
-            DailyReviewView recordRevie = new DailyReviewView();
+            var recordToReview = AllRecordCollectionView.CurrentItem as Daily;
+            List<int> recordToUpdate;
+            DailyReviewView recordRevie = new DailyReviewView(recordToReview.Comments + getReviewStr(out recordToUpdate));
             recordRevie.ShowDialog();
+            recordToUpdate.Add(recordToReview.Id);
+            m_dbAccess.updateReiveStatus(recordToUpdate);
+            updateUI();
+        }
+        private string getReviewStr(out List<int> recordID)
+        {
+            string reviewStr = string.Empty;
+            recordID = new List<int>();
+
+
+            //todo. better solution? not sure allRecordWithRiviewInfo.Count
+            if (m_allRecord.Count > 6)
+            {
+                reviewStr += m_allRecord[6].Date.ToString("yyyyMMdd") + "\n" + m_allRecord[6].Comments + "\n\n";
+                recordID.Add(m_allRecord[6].Id);
+            }
+            if (m_allRecord.Count > 13)
+            {
+                reviewStr += m_allRecord[13].Date.ToString("yyyyMMdd") + "\n" + m_allRecord[13].Comments + "\n\n";
+                recordID.Add(m_allRecord[13].Id);
+            }
+            if (m_allRecord.Count > 30)
+            {
+                reviewStr += m_allRecord[30].Date.ToString("yyyyMMdd") + "\n" + m_allRecord[30].Comments + "\n\n";
+                recordID.Add(m_allRecord[30].Id);
+            }
+
+            return reviewStr;
         }
 
         private void updateUI()
@@ -284,26 +285,26 @@ namespace DailyTask.ViewModel
 
         private void updateLongestRecord()
         {
-            uint jl_done= 0, jl_fail=0, max_jl_done = 0, max_jl_fail = 0, drink_done = 0, drink_fail = 0, max_drink_done = 0, max_drink_fail = 0;
+            uint jl_done = 0, jl_fail = 0, max_jl_done = 0, max_jl_fail = 0, drink_done = 0, drink_fail = 0, max_drink_done = 0, max_drink_fail = 0;
             foreach (var item in m_allRecord)
             {
-                if(item.Jl == 0 )
+                if (item.Jl == 0)
                 {
                     jl_fail++;
                     jl_done = 0;
                 }
-                else if(item.Jl == 1)
+                else if (item.Jl == 1)
                 {
                     jl_done++;
                     jl_fail = 0;
                 }
 
-                if(item.Drink == 0)
+                if (item.Drink == 0)
                 {
                     drink_fail++;
                     drink_done = 0;
                 }
-                else if(item.Drink==1)
+                else if (item.Drink == 1)
                 {
                     drink_done++;
                     drink_fail = 0;
@@ -348,15 +349,10 @@ namespace DailyTask.ViewModel
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_drinkFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
 
-            if (m_monthSelectedIndex == 0 )
+            if (m_monthSelectedIndex == 0)
             {
-                List<double> monthScore = m_allRecord.OrderBy(p=>p.Id).Select(p => p.Score ?? default(double)).ToList();
+                List<double> monthScore = m_allRecord.OrderBy(p => p.Id).Select(p => p.Score ?? default(double)).ToList();
                 m_totalScoreSeriesCollection.Add(new LineSeries { Title = m_monthSelectedIndex.ToString(), Values = new ChartValues<double>(monthScore) });
-                //for (int i=0; i<DateTime.Now.Month; i++)
-                //{
-                //    List<double> monthScore = m_allRecord.Where(p => p.Date.Month == i).Select(p => p.Score??default(double)).ToList();
-                //    m_totalScoreSeriesCollection.Add(new LineSeries { Title = i.ToString(), Values = new ChartValues<double> (monthScore) });
-                //}
             }
             else
             {

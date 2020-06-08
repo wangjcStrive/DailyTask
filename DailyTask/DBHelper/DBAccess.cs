@@ -59,6 +59,32 @@ namespace DailyTask.DBHelper
             }
         }
 
+        public void updateReiveStatus(List<int> IDList)
+        {
+            int recordIndex = 0;
+            try
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+                    foreach (var item in IDList)
+                    {
+                        recordIndex++;
+                        var query = dbc.Daily.Single(p => p.Id == item);
+                        if (query.Reviewd == null)
+                            query.Reviewd = 1;
+                        else
+                            query.Reviewd = query.Reviewd + 1;
+                        dbc.SaveChanges();
+                    }
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                m_logger.Error($"can't update record {IDList[recordIndex]}. review status. {e.Message}");
+                MessageBox.Show($"can't update record {IDList[recordIndex]}. review status. {e.Message}");
+            }
+        }
+
         public void deleteRecordByID(int recordID)
         {
             try
