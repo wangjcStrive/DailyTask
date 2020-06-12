@@ -244,7 +244,7 @@ namespace DailyTask.ViewModel
         {
             var recordToReview = AllRecordCollectionView.CurrentItem as Daily;
             List<int> recordToUpdate;
-            DailyReviewView recordRevie = new DailyReviewView(recordToReview.Comments + getReviewStr(out recordToUpdate));
+            DailyReviewView recordRevie = new DailyReviewView(recordToReview.Comments + "\n\n" + getReviewStr(out recordToUpdate));
             recordRevie.ShowDialog();
             recordToUpdate.Add(recordToReview.Id);
             m_dbAccess.updateReiveStatus(recordToUpdate);
@@ -325,7 +325,8 @@ namespace DailyTask.ViewModel
 
         private void updateDataGrid()
         {
-            m_allRecord = m_dbAccess.getAllRecord().OrderByDescending(p => p.Date).ToList();
+            m_allRecord = m_dbAccess.getAllRecord();
+            //m_allRecord = await m_dbAccess.getAllRecordAsync();
             //todo!! 这里要更新datagrid，每次都要重新GetDefaultView()，有没有其他方法。
             AllRecordCollectionView = CollectionViewSource.GetDefaultView(new ObservableCollection<Daily>(m_allRecord));
             AllRecordCollectionView.Refresh();

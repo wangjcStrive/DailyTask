@@ -13,6 +13,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Controls;
 
 namespace DailyTask
 {
@@ -53,10 +54,19 @@ namespace DailyTask
         {
             await IOC.StartAsync();
 
+            //http://madprops.org/blog/wpf-textbox-selectall-on-focus/
+            EventManager.RegisterClassHandler(typeof(TextBox), TextBox.GotKeyboardFocusEvent, new RoutedEventHandler(TextBox_GotFocus));
+
+
             var mainWindow = IOC.Services.GetRequiredService<MainWindow>();
             mainWindow.Show();
 
             base.OnStartup(e);
+        }
+
+        private void TextBox_GotFocus(object sender, RoutedEventArgs e)
+        {
+            (sender as TextBox).SelectAll();
         }
 
         protected override async void OnExit(ExitEventArgs e)

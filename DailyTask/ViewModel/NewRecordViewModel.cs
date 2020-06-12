@@ -17,7 +17,7 @@ namespace DailyTask.ViewModel
         private Daily m_dailyRecord = new Daily();
         private bool m_dialogClose;
         private DBAccess m_dbAccess = new DBAccess();
-
+        private string m_windowTitleRecordID = string.Empty;
 
         #region Pubslic
         public NewRecordViewModel()
@@ -44,6 +44,16 @@ namespace DailyTask.ViewModel
             set
             {
                 m_dialogClose = value;
+                NotifyPropertyChanged();
+            }
+        }
+
+        public string WindowTitleRecordID
+        {
+            get => m_windowTitleRecordID;
+            set
+            {
+                m_windowTitleRecordID = value;
                 NotifyPropertyChanged();
             }
         }

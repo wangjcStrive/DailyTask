@@ -19,9 +19,22 @@ namespace DailyTask.DBHelper
         {
             using (var dbc = new DailyTaskContext())
             {
-                //todo. asyn/await
-                return dbc.Daily.OrderByDescending(p=>p.Id).ToList();
+                return dbc.Daily.OrderByDescending(p=>p.Date).ToList();
             }
+        }
+
+        //todo. 还是不能使用异步，因为后面pie chart及其他部分都需要这里从数据库读到的allRecord
+        public async Task<List<Daily>> getAllRecordAsync()
+        {
+            List<Daily> allRecord = new List<Daily>();
+            await Task.Run(() =>
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+                    allRecord =  dbc.Daily.OrderByDescending(p=>p.Date).ToList();
+                }
+            });
+            return allRecord;
         }
 
         public int getRecordCount()
@@ -132,7 +145,7 @@ namespace DailyTask.DBHelper
                         query.Reviewd = record.Reviewd;
                         dbc.SaveChanges();
                         m_logger.Info($"modify {record.Id} {record.Week} {record.Date:yyyyMMdd} done!");
-                        MessageBox.Show($"modify {record.Id} done!");
+                        MessageBox.Show($"modify {record.Id}, {record.Date:yyyyMMdd} done!");
                     }
                     else            //add new
                     {
@@ -141,8 +154,8 @@ namespace DailyTask.DBHelper
                         {
                             dbc.Daily.Add(record);
                             dbc.SaveChanges();
-                            m_logger.Info($"add {record.Id} {record.Week} {record.Date:yyyyMMdd} done!");
-                            MessageBox.Show($"add {record.Id} done!");
+                            m_logger.Info($"add {record.Id} {record.Week} {record.Date:yyyy-MM-dd} done!");
+                            MessageBox.Show($"add {record.Id}, {record.Date:yyyy-MM-dd} done!");
                         }
                         else
                             MessageBox.Show("date exist!");

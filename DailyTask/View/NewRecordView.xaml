@@ -9,7 +9,7 @@
         dc:DialogCloser.DialogResult="{Binding DialogClose}"
         xmlns:vm="clr-namespace:DailyTask.ViewModel"
         WindowStartupLocation="CenterScreen"
-        Title="NewRecordView" Height="500" Width="400">
+        Title="{Binding WindowTitleRecordID}" Height="500" Width="400">
     <Window.DataContext>
         <vm:NewRecordViewModel x:Name="AddRecordWindowDC"/>
     </Window.DataContext>
@@ -73,6 +73,8 @@
             <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="11" Grid.Column="1" Width="90" Height="30" HorizontalAlignment="Left"/>
         </Grid>
         <TextBox Text="{Binding DailyRecord.Comments}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" MinWidth="380" MinHeight="80" HorizontalAlignment="Center" VerticalAlignment="Center" Grid.Row="1" FontSize="12px"/>
-        <Button x:Name="AddRecord" Content="Done" Command="{Binding RecordEditDone}" Grid.Row="2"/>
+        <StackPanel Orientation="Vertical" Grid.Row="2">
+            <Button x:Name="AddRecord" Content="Done" Command="{Binding RecordEditDone}" Grid.Row="2"/>
+        </StackPanel>
     </Grid>
 </Window>

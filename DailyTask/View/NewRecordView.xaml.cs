@@ -27,6 +27,7 @@ namespace DailyTask.View
         {
             InitializeComponent();
             this.AddRecordWindowDC.DailyRecord = daily;
+            this.AddRecordWindowDC.WindowTitleRecordID = "Record: " + daily.Id.ToString();
         }
     }
 }
