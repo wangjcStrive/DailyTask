@@ -170,10 +170,11 @@ namespace DailyTask.ViewModel
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                                {
-                                   List<int> recordToUpdate;
-                                   DailyReviewView recordRevie = new DailyReviewView(getReviewStr(out recordToUpdate));
-                                   recordRevie.ShowDialog();
-                                   m_dbAccess.updateReiveStatus(recordToUpdate);
+                                   //List<int> recordToUpdate;
+                                   //DailyReviewView recordRevie = new DailyReviewView(getReviewStr(out recordToUpdate));
+                                   //recordRevie.ShowDialog();
+                                   //m_dbAccess.updateReiveStatus(recordToUpdate);
+                                   onReviewRecord();
                                })
                             );
                         break;

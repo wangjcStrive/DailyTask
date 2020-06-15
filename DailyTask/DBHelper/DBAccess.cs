@@ -144,8 +144,8 @@ namespace DailyTask.DBHelper
                         query.Comments = record.Comments;
                         query.Reviewd = record.Reviewd;
                         dbc.SaveChanges();
-                        m_logger.Info($"modify {record.Id} {record.Week} {record.Date:yyyyMMdd} done!");
-                        MessageBox.Show($"modify {record.Id}, {record.Date:yyyyMMdd} done!");
+                        m_logger.Info($"modify {record.Id} {record.Week} {record.Date:yyyy/MM/dd} done!");
+                        MessageBox.Show($"modify {record.Id}, {record.Date:yyyy/MM/dd} done!");
                     }
                     else            //add new
                     {
@@ -154,8 +154,8 @@ namespace DailyTask.DBHelper
                         {
                             dbc.Daily.Add(record);
                             dbc.SaveChanges();
-                            m_logger.Info($"add {record.Id} {record.Week} {record.Date:yyyy-MM-dd} done!");
-                            MessageBox.Show($"add {record.Id}, {record.Date:yyyy-MM-dd} done!");
+                            m_logger.Info($"add {record.Id} {record.Week} {record.Date:yyyy/MM/dd} done!");
+                            MessageBox.Show($"add {record.Id}, {record.Date:yyyy/MM/dd} done!");
                         }
                         else
                             MessageBox.Show("date exist!");
