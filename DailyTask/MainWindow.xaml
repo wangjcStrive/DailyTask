@@ -51,10 +51,19 @@
                             </Style.Triggers>
                         </Style>
                     </DataGrid.RowStyle>
+                    <DataGrid.CellStyle>
+                        <Style TargetType="DataGridCell">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding Jl}" Value="-1">
+                                    <Setter Property="Foreground" Value="Red"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </DataGrid.CellStyle>
                 </DataGrid>
                 <Grid Grid.Row="2">
                     <Grid.ColumnDefinitions>
-                        <ColumnDefinition Width="1*"/>
+                        <ColumnDefinition Width="2*"/>
                         <ColumnDefinition Width="5*"/>
                     </Grid.ColumnDefinitions>
                     <Grid Grid.Column="0">
@@ -64,8 +73,8 @@
                         </Grid.RowDefinitions>
                         <Grid Grid.Row="0">
                             <Grid.ColumnDefinitions>
-                                <ColumnDefinition/>
-                                <ColumnDefinition/>
+                                <ColumnDefinition Width="2*"/>
+                                <ColumnDefinition Width="3*"/>
                             </Grid.ColumnDefinitions>
                             <Grid Grid.Column="0">
                                 <Grid.RowDefinitions>
@@ -81,12 +90,11 @@
                             </Grid>
                             <Grid Grid.Column="1">
                                 <Grid.RowDefinitions>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
-                                    <RowDefinition/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="3*"/>
                                 </Grid.RowDefinitions>
-                                <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" FontStretch="Medium" Grid.Row="0"/>
+                                <ComboBox Name="Month" ItemsSource="{Binding MonthChoose}" SelectedIndex="{Binding MonthSelectedIndex}" Width="80" Height="25" FontStretch="Medium" Grid.Row="0" HorizontalAlignment="Left"/>
+                                <TextBlock Text="{Binding WeatherInfo}" Grid.Row="1" HorizontalAlignment="Left"/>
                                 <!--<TextBox Text="{Binding CommentsFilter, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Grid.Row="1" HorizontalAlignment="Center"/>-->
                             </Grid>
                         </Grid>

@@ -25,6 +25,7 @@ using NLog.Extensions.Logging;
 using System.Net.Http.Headers;
 using System.ComponentModel;
 using System.Windows.Data;
+using DailyTask.Module;
 
 namespace DailyTask.ViewModel
 {
@@ -67,11 +68,21 @@ namespace DailyTask.ViewModel
         private string m_longestDrink = string.Empty;
         private string m_longestJL = string.Empty;
         private string m_commentsFilter = string.Empty;
+        private string m_weatherInfo = string.Empty;
         #endregion
 
 
 
         #region Property
+        public string WeatherInfo
+        {
+            get => m_weatherInfo;
+            set
+            {
+                m_weatherInfo = value;
+                NotifyPropertyChanged();
+            }
+        }
         public string CommentsFilter
         {
             get => m_commentsFilter;
@@ -187,8 +198,16 @@ namespace DailyTask.ViewModel
             updateUI();
         }
 
+        private async void getWeather()
+        {
+            await Task.Run(() =>
+            {
+                WeatherInfo = Weather.getWeather();
+            });
+        }
         private void initAll()
         {
+            getWeather();
             updateUI();
             InitRelayCommands();
             showReview();
@@ -289,15 +308,16 @@ namespace DailyTask.ViewModel
             uint jl_done = 0, jl_fail = 0, max_jl_done = 0, max_jl_fail = 0, drink_done = 0, drink_fail = 0, max_drink_done = 0, max_drink_fail = 0;
             foreach (var item in m_allRecord)
             {
-                if (item.Jl == 0)
-                {
-                    jl_fail++;
-                    jl_done = 0;
-                }
-                else if (item.Jl == 1)
+                if (item.Jl == 1)
                 {
                     jl_done++;
                     jl_fail = 0;
+
+                }
+                else
+                {
+                    jl_fail++;
+                    jl_done = 0;
                 }
 
                 if (item.Drink == 0)
@@ -305,7 +325,7 @@ namespace DailyTask.ViewModel
                     drink_fail++;
                     drink_done = 0;
                 }
-                else if (item.Drink == 1)
+                else
                 {
                     drink_done++;
                     drink_fail = 0;
