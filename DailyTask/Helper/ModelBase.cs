@@ -6,9 +6,7 @@ using System.Text;
 
 namespace DailyTask.Model
 {
-    //todo.
-    //新添加的record要同步到住窗口，record base已经继承了ModelBase，不能同时继承EventArgs，所以加到了这里...
-    public class ModelBase : EventArgs, INotifyPropertyChanged
+    public class ModelBase : INotifyPropertyChanged
     {
         protected void NotifyPropertyChanged([CallerMemberName] string propertyName = null)
         {
@@ -19,7 +17,6 @@ namespace DailyTask.Model
 
             PropertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
-
         public event PropertyChangedEventHandler PropertyChanged;
     }
 }

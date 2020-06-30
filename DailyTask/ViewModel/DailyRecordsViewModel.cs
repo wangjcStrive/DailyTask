@@ -277,6 +277,11 @@ namespace DailyTask.ViewModel
 
 
             //todo. better solution? not sure allRecordWithRiviewInfo.Count
+            if (m_allRecord.Count > 2)
+            {
+                reviewStr += m_allRecord[2].Date.ToString("yyyyMMdd") + "\n" + m_allRecord[2].Comments + "\n\n";
+                recordID.Add(m_allRecord[2].Id);
+            }
             if (m_allRecord.Count > 6)
             {
                 reviewStr += m_allRecord[6].Date.ToString("yyyyMMdd") + "\n" + m_allRecord[6].Comments + "\n\n";
