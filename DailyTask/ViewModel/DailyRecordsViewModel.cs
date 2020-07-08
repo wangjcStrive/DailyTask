@@ -174,10 +174,11 @@ namespace DailyTask.ViewModel
         {
             Task t = Task.Run(() =>
             {
+                string date = string.Empty;
                 while (true)
                 {
                     string currentTime = DateTime.Now.ToString("hh:mm");
-                    if (currentTime == TimeToReview)
+                    if (currentTime == TimeToReview && date != DateTime.Now.ToShortDateString())
                     {
                         Application.Current.Dispatcher.BeginInvoke(new Action(() =>
                                {
@@ -188,6 +189,7 @@ namespace DailyTask.ViewModel
                                    onReviewRecord();
                                })
                             );
+                        date = DateTime.Now.ToShortDateString();
                         break;
                     }
                     Thread.Sleep(10000);
