@@ -145,7 +145,7 @@ namespace DailyTask.DBHelper
                         query.Reviewd = record.Reviewd;
                         dbc.SaveChanges();
                         m_logger.Info($"modify {record.Id} {record.Week} {record.Date:yyyy/MM/dd} done!");
-                        MessageBox.Show($"modify {record.Id}, {record.Date:yyyy/MM/dd} done!");
+                        MessageBox.Show($"modify {record.Id}, {record.Date:yyyy/MM/dd}! score: {record.Score}");
                     }
                     else            //add new
                     {
@@ -155,7 +155,7 @@ namespace DailyTask.DBHelper
                             dbc.Daily.Add(record);
                             dbc.SaveChanges();
                             m_logger.Info($"add {record.Id} {record.Week} {record.Date:yyyy/MM/dd} done!");
-                            MessageBox.Show($"add {record.Id}, {record.Date:yyyy/MM/dd} done!");
+                            MessageBox.Show($"add {record.Id}, {record.Date:yyyy/MM/dd}! score: {record.Score}");
                         }
                         else
                             MessageBox.Show("date exist!");
