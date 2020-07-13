@@ -16,6 +16,8 @@ namespace DailyTask.Models
         }
 
         public virtual DbSet<Daily> Daily { get; set; }
+        public DbSet<AccountRecord> accountRecords { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -47,6 +49,13 @@ namespace DailyTask.Models
 
                 entity.Property(e => e.Week).HasMaxLength(255);
             });
+
+            modelBuilder.Entity<AccountRecord>().ToTable("AccountManagement");
+            //modelBuilder.Entity<AccountRecord>(entity => 
+            //{
+            //    entity.Property(e => e.ID).HasColumnName("ID").ValueGeneratedNever();
+
+            //});
 
             OnModelCreatingPartial(modelBuilder);
         }

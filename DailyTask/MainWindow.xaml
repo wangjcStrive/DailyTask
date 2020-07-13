@@ -5,9 +5,11 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:DailyTask"
         xmlns:vm="clr-namespace:DailyTask.ViewModel"
+        xmlns:view="clr-namespace:DailyTask.View"
         xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
         WindowStartupLocation="CenterScreen"
+        Background="AliceBlue"
         Title="MainWindow" Height="700" Width="1600">
     <Window.DataContext>
         <vm:DailyRecordsViewModel x:Name="MainWindowDC"/>
@@ -123,6 +125,8 @@
                 </Grid>
             </Grid>
         </TabItem>
-        <TabItem Header="password"></TabItem>
+        <TabItem Header="password">
+            <view:AccountManagemnetView/>
+        </TabItem>
     </TabControl>
 </Window>

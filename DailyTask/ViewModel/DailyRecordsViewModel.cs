@@ -90,16 +90,7 @@ namespace DailyTask.ViewModel
             {
                 m_commentsFilter = value;
                 NotifyPropertyChanged();
-                m_allRecordCollectionView.Filter = obj =>
-                {
-                    Daily record = obj as Daily;
-                    if (CommentsFilter == string.Empty)
-                        return true;
-                    bool bFilterResult = false;
-                    if (record != null && record.Comments != null)
-                        bFilterResult = record.Comments.ContainsIgnoreCase(CommentsFilter);
-                    return bFilterResult;
-                };
+                AllRecordCollectionView.Refresh();
             }
         }
         public int MonthSelectedIndex
@@ -355,8 +346,9 @@ namespace DailyTask.ViewModel
         {
             m_allRecord = m_dbAccess.getAllRecord();
             //m_allRecord = await m_dbAccess.getAllRecordAsync();
-            //todo!! 这里要更新datagrid，每次都要重新GetDefaultView()，有没有其他方法。
+            //todo!! 可以不用ObservableCollection吗？这里要更新datagrid，每次都要重新GetDefaultView()，有没有其他方法。
             AllRecordCollectionView = CollectionViewSource.GetDefaultView(new ObservableCollection<Daily>(m_allRecord));
+            AllRecordCollectionView.Filter = commentsFilter;
             AllRecordCollectionView.Refresh();
         }
 
@@ -388,6 +380,17 @@ namespace DailyTask.ViewModel
                 List<double> monthScore = m_allRecord.OrderBy(p => p.Id).Where(p => p.Date.Month == m_monthSelectedIndex).Select(p => p.Score ?? default(double)).ToList();
                 m_totalScoreSeriesCollection.Add(new LineSeries { Title = m_monthSelectedIndex.ToString(), Values = new ChartValues<double>(monthScore) });
             }
+        }
+
+        private bool commentsFilter(object obj)
+        {
+            Daily record = obj as Daily;
+            if (CommentsFilter == string.Empty)
+                return true;
+            bool bFilterResult = false;
+            if (record != null && record.Comments != null)
+                bFilterResult = record.Comments.ContainsIgnoreCase(CommentsFilter);
+            return bFilterResult;
         }
         #endregion
     }

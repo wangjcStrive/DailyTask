@@ -23,6 +23,31 @@ namespace DailyTask.DBHelper
             }
         }
 
+        public List<AccountRecord> getAllAccountRecord()
+        {
+            using (var dbc = new DailyTaskContext())
+            {
+                return dbc.accountRecords.ToList();
+            }
+        }
+
+        public void addAccountRecord(AccountRecord newRecord)
+        {
+            try
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+                    dbc.accountRecords.Add(newRecord);
+                    dbc.SaveChanges();
+                }
+            }
+            catch (Exception e)
+            {
+                m_logger.Error($"save account record {newRecord.ID} faile! {e.Message}");
+                MessageBox.Show($"save account record {newRecord.ID} faile! {e.Message}");
+            }
+        }
+
         //todo. 还是不能使用异步，因为后面pie chart及其他部分都需要这里从数据库读到的allRecord
         public async Task<List<Daily>> getAllRecordAsync()
         {
@@ -116,6 +141,44 @@ namespace DailyTask.DBHelper
             }
         }
 
+        public void deleteRecordByType(object record)
+        {
+            try
+            {
+                using (var dbc = new DailyTaskContext())
+                {
+
+                    if ("AccountRecord" == record.GetType().Name)
+                    {
+                        var accountRecord = record as AccountRecord;
+                        var query = dbc.accountRecords.Single(p => p.ID == accountRecord.ID);
+                        dbc.Remove(query);
+                    }
+                    else if ("Daily" == record.GetType().Name)
+                    {
+                        var dailyRecord = record as Daily;
+                        var query = dbc.Daily.Single(p => p.Id == dailyRecord.Id);
+                        dbc.Remove(query);
+
+                    }
+                    else
+                    {
+                        m_logger.Error($"invalid record type {record.GetType().Name}!");
+                        MessageBox.Show($"invalid record type {record.GetType().Name}!");
+                        throw new Exception("invalid record type!");
+                    }
+                    dbc.SaveChanges();
+                }
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+        }
+
         public void save(Daily record)
         {
             try
@@ -125,7 +188,7 @@ namespace DailyTask.DBHelper
                     var query = dbc.Daily.SingleOrDefault(p => p.Id == record.Id);
                     if (query != null)  //exist, update
                     {
-                        //todo. better soluton?
+                        //todo. better soluton? 遍历foreach所有的property
                         query.Id = record.Id;
                         query.Date = record.Date;
                         query.Week = record.Week;
