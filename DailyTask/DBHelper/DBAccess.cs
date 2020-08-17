@@ -37,8 +37,21 @@ namespace DailyTask.DBHelper
             {
                 using (var dbc = new DailyTaskContext())
                 {
-                    dbc.accountRecords.Add(newRecord);
-                    dbc.SaveChanges();
+                    var query = dbc.accountRecords.SingleOrDefault(p => p.ID == newRecord.ID);
+                    if (query!=null)    //modify record
+                    {
+                        query.AccountName = newRecord.AccountName;
+                        query.Password = newRecord.Password;
+                        query.Comments = newRecord.Comments;
+                        dbc.SaveChanges();
+                        MessageBox.Show($"modify account record {newRecord.ID}-{newRecord.Comments}");
+                    }
+                    else
+                    {
+                        dbc.accountRecords.Add(newRecord);
+                        dbc.SaveChanges();
+                        MessageBox.Show($"add account record {newRecord.ID}-{newRecord.Comments}");
+                    }
                 }
             }
             catch (Exception e)

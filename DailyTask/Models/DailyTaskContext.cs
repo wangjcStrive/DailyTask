@@ -39,7 +39,7 @@ namespace DailyTask.Models
 
                 entity.Property(e => e.Date).HasColumnType("date");
 
-                entity.Property(e => e.EatTooMuch).HasColumnName(" EatTooMuch");
+                entity.Property(e => e.EatTooMuch).HasColumnName("EatTooMuch");
 
                 entity.Property(e => e.Hz).HasColumnName("HZ");
 

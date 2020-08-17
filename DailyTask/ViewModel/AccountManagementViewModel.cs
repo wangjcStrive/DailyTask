@@ -122,8 +122,8 @@ namespace DailyTask.ViewModel
                     bFilterResult = false;
                 else
                 {
-                    if (record != null && record.AccountName != null)
-                        bFilterResult = record.AccountName.ContainsIgnoreCase(subStr[1]);
+                    if (record != null && record.Comments != null)
+                        bFilterResult = record.Comments.ContainsIgnoreCase(subStr[1]);
                 }
             }
             return bFilterResult;

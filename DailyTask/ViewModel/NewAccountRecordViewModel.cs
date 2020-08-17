@@ -62,7 +62,8 @@ namespace DailyTask.ViewModel
 
         private void onRecordModifyDone()
         {
-            if (AccountRecordToModify.AccountName != null && AccountRecordToModify.Password != null)
+            //if (AccountRecordToModify.AccountName != null && AccountRecordToModify.Password != null)
+            if (!string.IsNullOrWhiteSpace(AccountRecordToModify.AccountName) && !string.IsNullOrWhiteSpace(AccountRecordToModify.Password) && !string.IsNullOrWhiteSpace(AccountRecordToModify.Comments))
             {
                 m_dbAccess.addAccountRecord(AccountRecordToModify);
                 DialogClose = true;
