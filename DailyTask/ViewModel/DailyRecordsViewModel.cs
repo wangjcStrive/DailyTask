@@ -29,6 +29,12 @@ using DailyTask.Module;
 
 namespace DailyTask.ViewModel
 {
+    public struct MonthScoreAndCount
+    {
+        public double m_monthScore;
+        public int m_monthRecordCount;
+    }
+
     public class DailyRecordsViewModel : ViewModelBase
     {
         public static int daysOffset = 7;
@@ -370,10 +376,23 @@ namespace DailyTask.ViewModel
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_drinkFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
 
+            // index = 0 : show average score of each month
             if (m_monthSelectedIndex == 0)
             {
-                List<double> monthScore = m_allRecord.OrderBy(p => p.Id).Select(p => p.Score ?? default(double)).ToList();
-                m_totalScoreSeriesCollection.Add(new LineSeries { Title = m_monthSelectedIndex.ToString(), Values = new ChartValues<double>(monthScore) });
+                //List<MonthScoreAndCount> monthScore = new List<MonthScoreAndCount>(new MonthScoreAndCount[12]);
+                List<double> averageMonthScore = new List<double>();
+                MonthScoreAndCount[] monthScore = new MonthScoreAndCount[12];
+                foreach (var item in m_allRecord)
+                {
+                    monthScore[item.Date.Month - 1].m_monthScore += item.Score ?? 0;
+                    monthScore[item.Date.Month - 1].m_monthRecordCount++;
+
+                }
+                foreach (var item in monthScore)
+                {
+                    averageMonthScore.Add(item.m_monthScore / item.m_monthRecordCount);
+                }
+                m_totalScoreSeriesCollection.Add(new LineSeries { Title = "AVG Score", Values = new ChartValues<double>(averageMonthScore) });
             }
             else
             {
