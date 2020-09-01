@@ -84,6 +84,7 @@ namespace DailyTask.ViewModel
                 m_dailyRecord.LearnDaily +
                 m_dailyRecord.Eng +
                 m_dailyRecord.Efficiency +
+                m_dailyRecord.Sport+
                 m_dailyRecord.Hz;
 
             //if (m_dailyRecord.Date.HasValue)

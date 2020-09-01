@@ -65,6 +65,11 @@ namespace DailyTask.ViewModel
         private int m_drinkFailCount = 0;
         private SeriesCollection m_totalScoreSeriesCollection = new SeriesCollection();
 
+        private SeriesCollection m_sportPieSeriesCollection = new SeriesCollection();
+        private int m_sportDoneCount = 0;
+        private int m_sportFailCount = 0;
+
+
         private int m_monthSelectedIndex = DateTime.Now.Month;
         private List<string> m_monthList = new List<string>()
         {
@@ -137,6 +142,12 @@ namespace DailyTask.ViewModel
         public SeriesCollection DrinkPieSeriesCollection
         {
             get => m_drinkPieSeriesCollection;
+            private set { }
+        }
+
+        public SeriesCollection SportPieSeriesCollection
+        {
+            get => m_sportPieSeriesCollection;
             private set { }
         }
         public SeriesCollection TotalScoreSeriesCollection
@@ -238,6 +249,7 @@ namespace DailyTask.ViewModel
                 LearnDaily = 0,
                 Jl = 0,
                 Reviewd = 0,
+                Sport = 0,
                 Comments = string.Empty
             }
             );
@@ -364,10 +376,12 @@ namespace DailyTask.ViewModel
             m_JLFailCount = m_allRecord.Count(p => p.Jl == 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
             m_drinkDoneCount = m_allRecord.Count(p => p.Drink > 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
             m_drinkFailCount = m_allRecord.Count(p => p.Drink == 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
-
+            m_sportDoneCount = m_allRecord.Count(p => p.Sport > 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
+            m_sportFailCount = m_allRecord.Count(p => p.Sport == 0 && (m_monthSelectedIndex == 0 ? true : long.Parse(p.Date.ToString("yyyyMM")) == (202000 + m_monthSelectedIndex)));
 
             m_JLPieSeriesCollection.Clear();
             m_drinkPieSeriesCollection.Clear();
+            m_sportPieSeriesCollection.Clear();
             m_totalScoreSeriesCollection.Clear();
 
             m_JLPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_JLDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
@@ -375,6 +389,10 @@ namespace DailyTask.ViewModel
 
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Done", Values = new ChartValues<double> { m_drinkDoneCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
             m_drinkPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_drinkFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+
+            m_sportPieSeriesCollection.Add(new PieSeries { Title= "Done", Values = new ChartValues<double> { m_sportDoneCount}, DataLabels=true, LabelPoint = (chartPoint) => { return string.Format("D ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+            m_sportPieSeriesCollection.Add(new PieSeries { Title = "Fail", Values = new ChartValues<double> { m_sportFailCount }, DataLabels = true, LabelPoint = (chartPoint) => { return string.Format("F ({0} {1:p0})", chartPoint.Y, chartPoint.Participation); } });
+
 
             // index = 0 : show average score of each month
             if (m_monthSelectedIndex == 0)

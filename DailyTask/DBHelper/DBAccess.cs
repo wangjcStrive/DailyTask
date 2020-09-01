@@ -219,6 +219,7 @@ namespace DailyTask.DBHelper
                         query.Score = record.Score;
                         query.Comments = record.Comments;
                         query.Reviewd = record.Reviewd;
+                        query.Sport = record.Sport;
                         dbc.SaveChanges();
                         m_logger.Info($"modify {record.Id} {record.Week} {record.Date:yyyy/MM/dd} done!");
                         MessageBox.Show($"modify {record.Id}, {record.Date:yyyy/MM/dd}! score: {record.Score}");

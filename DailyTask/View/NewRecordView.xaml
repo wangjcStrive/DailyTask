@@ -42,6 +42,7 @@
                 <RowDefinition/>
                 <RowDefinition/>
                 <RowDefinition/>
+                <RowDefinition/>
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
@@ -58,7 +59,8 @@
             <TextBlock Grid.Row="8" Grid.Column="0" Text="WashRoom" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBlock Grid.Row="9" Grid.Column="0" Text="Efficiency" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBlock Grid.Row="10" Grid.Column="0" Text="HZ" VerticalAlignment="Center" Width="60" Height="20"/>
-            <TextBlock Grid.Row="11" Grid.Column="0" Text="Date" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="11" Grid.Column="0" Text="Sport" VerticalAlignment="Center" Width="60" Height="20"/>
+            <TextBlock Grid.Row="12" Grid.Column="0" Text="Date" VerticalAlignment="Center" Width="60" Height="20"/>
             <TextBox Text="{Binding DailyRecord.Baby}" Grid.Row="0" Grid.Column="1"/>
             <TextBox Text="{Binding DailyRecord.Jl}" Grid.Row="1" Grid.Column="1"/>
             <TextBox Text="{Binding DailyRecord.Drink}" Grid.Row="2" Grid.Column="1"/>
@@ -70,7 +72,8 @@
             <TextBox Text="{Binding DailyRecord.Washroom}" Grid.Row="8" Grid.Column="1"/>
             <TextBox Text="{Binding DailyRecord.Efficiency}" Grid.Row="9" Grid.Column="1"/>
             <TextBox Text="{Binding DailyRecord.Hz}" Grid.Row="10" Grid.Column="1"/>
-            <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="11" Grid.Column="1" Width="90" Height="30" HorizontalAlignment="Left"/>
+            <TextBox Text="{Binding DailyRecord.Sport}" Grid.Row="11" Grid.Column="1"/>
+            <DatePicker x:Name="Date" SelectedDate="{Binding DailyRecord.Date}" Grid.Row="12" Grid.Column="1" Width="90" Height="30" HorizontalAlignment="Left"/>
         </Grid>
         <TextBox Text="{Binding DailyRecord.Comments}" TextWrapping="Wrap" AcceptsReturn="True" VerticalScrollBarVisibility="Visible" MinWidth="380" MinHeight="80" HorizontalAlignment="Stretch" VerticalAlignment="Center" Grid.Row="1" FontSize="12px"/>
         <StackPanel Orientation="Vertical" Grid.Row="2">
